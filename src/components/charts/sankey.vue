@@ -6,6 +6,7 @@
 <script>
 import * as d3 from 'd3';
 import {json} from 'd3-fetch';
+import axios from 'axios'
 
 console.info('json', json)
 
@@ -49,11 +50,17 @@ d3.sankey = function() {
   };
 
   sankey.layout = function(iterations) {
+    console.info('112')
     computeNodeLinks();
+    console.info('113')
     computeNodeValues();
+    console.info('114')
     computeNodeBreadths();
+    console.info('115')
     computeNodeDepths(iterations);
+    console.info('116')
     computeLinkDepths();
+    console.info('117')
     return sankey;
   };
 
@@ -119,21 +126,27 @@ d3.sankey = function() {
   // Nodes are assigned the maximum breadth of incoming neighbors plus one;
   // nodes with no incoming links are assigned breadth zero, while
   // nodes with no outgoing links are assigned the maximum breadth.
+  // 似乎是判定node横轴位置
   function computeNodeBreadths() {
     var remainingNodes = nodes,
         nextNodes,
+        index = 0,
         x = 0;
-
+    console.info('computeNodeBreadths:nodes', remainingNodes)
     while (remainingNodes.length) {
+      console.info('computeNodeBreadths', index ++)
       nextNodes = [];
       remainingNodes.forEach(function(node) {
         node.x = x;
         node.dx = nodeWidth;
-        node.sourceLinks.forEach(function(link) {
-          nextNodes.push(link.target);
+        node.sourceLinks.forEach(function(link) { // 集中所有source link
+          if ( !nextNodes.map((item) => {return item.name}).includes(link.target.name)) { // 滤重
+            nextNodes.push(link.target);
+          }
         });
       });
-      remainingNodes = nextNodes;
+      console.info('computeNodeBreadths:nodes:after 1 loop', remainingNodes)
+      remainingNodes = index > 10 ? [] : nextNodes;
       ++x;
     }
     moveSinksRight(x);
@@ -309,7 +322,6 @@ export default {
   },
   mounted() {
     var units = 'Widgets';
-    console.info('d3.scale', d3, this.$refs.canvas)
     var margin = {top: 10, right: 10, bottom: 10, left: 10},
         width = 1200 - margin.left - margin.right,
         height = 740 - margin.top - margin.bottom;
@@ -333,23 +345,42 @@ export default {
       .size([width, height]);
     var path = sankey.link();
     
-    json('/static/green-house.json').then(function(d) {
+    json('/static/servers.json').then(function(response) {
+      let formatedData = {
+        nodes: [],
+        links: []
+      }
+      let list = response._data._retData.list
+      list.forEach((n) => {
+        formatedData.nodes.push({name: n.node_name})
+        n.next_nodes.forEach((t) => {
+          formatedData.links.push({
+            source: n.node_name,
+            target: t.node_name,
+            value: t.call_count,
+            time: t.average_time
+          })
+        })
+      })
+      // let formatedData = response
       var nodeMap = {};
-      d.nodes.forEach(function(x) { nodeMap[x.name] = x; });
-      d.links = d.links.map(function(x) {
+      formatedData.nodes.forEach(function(x) { nodeMap[x.name] = x; });
+      formatedData.links = formatedData.links.map(function(x) {
         return {
           source: nodeMap[x.source],
           target: nodeMap[x.target],
           value: x.value
         };
       });
+      console.info('111')
       sankey
-        .nodes(d.nodes)
-        .links(d.links)
+        .nodes(formatedData.nodes)
+        .links(formatedData.links)
         .layout(32);
+      console.info('222')
       // add in the links
       var link = svg.append('g').selectAll('.link')
-        .data(d.links)
+        .data(formatedData.links)
         .enter().append('path')
         .attr('class', 'link')
         .attr('d', path)
@@ -363,7 +394,7 @@ export default {
     
     // add in the nodes
       var node = svg.append('g').selectAll('.node')
-        .data(d.nodes)
+        .data(formatedData.nodes)
         .enter().append('g')
         .attr('class', 'node')
         .attr('transform', function(d) { 
@@ -409,7 +440,7 @@ export default {
         link.attr('d', path);
       }
     })
-  },
+  },// mounted
   methods: {
   },
 };
