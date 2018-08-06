@@ -26,7 +26,7 @@
 
     <v-container>
       <v-layout row>
-        <v-flex xs12 md8 offset-md2>
+        <v-flex xs12>
           <v-slide-y-transition mode="out-in">
             <router-view />
           </v-slide-y-transition>

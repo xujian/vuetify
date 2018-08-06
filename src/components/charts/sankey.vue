@@ -322,6 +322,7 @@ export default {
     var svg = d3.select(this.$refs.canvas).append('svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
+      .attr('viewBox', `0 0  ${width} ${height}`)
       .append('g')
       .attr('transform',  'translate(' + margin.left + ',' + margin.top + ')');
     
@@ -416,7 +417,10 @@ export default {
 
 <style lang='stylus'>
 .canvas {
-  height: 500px;
+  height 500px
+  svg {
+    width 100%
+  }
 }
 .node rect {
   cursor: move;
