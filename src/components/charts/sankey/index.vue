@@ -395,9 +395,12 @@ export default {
       }
       let list = response._data._retData.list
       list.forEach((n) => {
+        if (n.node_level === 4) {
+          n.node_level = 3
+        }
         formatedData.nodes.push({
           name: n.node_name,
-          level: ({1:0, 2:1, 3:5, 4:6})[parseInt(n.node_level, 10)]
+          level: ({1:0, 2:1, 3:4})[parseInt(n.node_level, 10)]
         })
         n.next_nodes.forEach((t) => {
           formatedData.links.push({
@@ -470,7 +473,7 @@ export default {
         .attr('dy', '.35em')
         .attr('text-anchor', 'end')
         .attr('transform', null)
-        .text(function(d) { return d.name; })
+        .text(d => `${d.name} (${d.level})`)
         .filter(function(d) { return d.x < width / 2; })
         .attr('x', 6 + sankey.nodeWidth())
         .attr('text-anchor', 'start');
