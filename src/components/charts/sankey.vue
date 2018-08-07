@@ -13,8 +13,10 @@ console.info('json', json)
 d3.sankey = function() {
   var sankey = {},
       width = 1200,
-      nodeWidth = 24,
-      nodePadding = 8,
+      nodeWidth = 20,
+      nodePadding = 20,
+      minNodeHeight = 10,
+      curvature = 0.75,
       size = [1, 1],
       nodes = [],
       links = [];
@@ -34,12 +36,14 @@ d3.sankey = function() {
   sankey.nodes = function(_) {
     if (!arguments.length) return nodes;
     nodes = _;
+    nodes.forEach((n, i) => {n.id = i})
     return sankey;
   };
 
   sankey.links = function(_) {
     if (!arguments.length) return links;
     links = _;
+    nodes.forEach((l, i) => {l.id = i})
     return sankey;
   };
 
@@ -70,8 +74,6 @@ d3.sankey = function() {
   };
 
   sankey.link = function() {
-    var curvature = .5;
-
     function link(d) {
       var x0 = d.source.x + d.source.dx,
           x1 = d.target.x,
@@ -128,7 +130,50 @@ d3.sankey = function() {
   // nodes with no outgoing links are assigned the maximum breadth.
   // 似乎是判定node横轴位置
   function computeNodeBreadths() {
-    var remainingNodes = nodes,
+    nodes.forEach((item) => {
+      item.x = item.level
+      item.dx = nodeWidth
+    })
+    console.info('pre-level2', nodes)
+    // 查找level=2平级之间互相调用
+    let level2 = nodes.filter(n => n.level === 1)
+    level2.forEach(n => { // 降级 level 2 -> 3
+      if (links.some(l => l.target.name === n.name && l.source.level >= 1)) {
+        console.info('LEVEL DOWN 3', n)
+        n.level = 2
+      }
+    })
+    let level3 = nodes.filter(n => n.level === 2)
+    level3.forEach(n => {
+      links.forEach(l => {
+        if(l.target.name === n.name) {
+          console.info('level3 links------------', l.source.level)
+          if (l.source.level >= 2) {
+            console.info('LEVEL DOWN 4', n)
+            n.level = 3
+          }
+        }
+      })
+    })
+    // check same level calls
+    // 检查同级调用
+    let circles = []
+    level3.forEach(n => {
+      links.forEach(l => {
+        if (l.target.name === n.name && l.source.level === 3) {
+          if (!circles.find(c => c.id === l.id)) {
+            circles.push(l)
+          }
+        }
+        if (l.source.name === n.name && l.target.level === 3) {
+          if (!circles.find(c => c.id === l.id)) {
+            circles.push(l)
+          }
+        }
+      })
+    })
+    console.info('circles----------------OOOOOO', circles)
+    /*var remainingNodes = nodes,
         nextNodes,
         index = 0,
         x = 0;
@@ -145,12 +190,13 @@ d3.sankey = function() {
           }
         });
       });
-      console.info('computeNodeBreadths:nodes:after 1 loop', remainingNodes)
-      remainingNodes = index > 10 ? [] : nextNodes;
+      console.info('computeNodeBreadths:nodes:after 1 loop', x, JSON.stringify(remainingNodes))
+      remainingNodes = index > 3 ? [] : nextNodes;
       ++x;
-    }
-    moveSinksRight(x);
-    scaleNodeBreadths((width - nodeWidth) / (x - 1));
+    }*/
+    // moveSinksRight(x);
+    scaleNodeBreadths(1200 / 7);
+    console.info('computeNodeBreadths', nodes)
   }
 
   function moveSourcesRight() {
@@ -171,20 +217,20 @@ d3.sankey = function() {
 
   function scaleNodeBreadths(kx) {
     nodes.forEach(function(node) {
-      node.x *= kx;
+      node.x = node.level * kx;
     });
   }
 
   function computeNodeDepths(iterations) {
     var nodesByBreadth = d3.nest()
-        .key(function(d) { return d.x; })
-        .sortKeys(d3.ascending)
-        .entries(nodes)
-        .map(function(d) { return d.values; });
-
-    //
+      .key(function(d) { return d.x; })
+      .sortKeys(d3.ascending)
+      .entries(nodes)
+      .map(function(d) { return d.values; });
+      console.info('computeNodeDepths-////////////////////', nodesByBreadth)
     initializeNodeDepth();
     resolveCollisions();
+    console.info('computedNodeDepths--------------------', iterations)
     for (var alpha = 1; iterations > 0; --iterations) {
       relaxRightToLeft(alpha *= .99);
       resolveCollisions();
@@ -193,14 +239,11 @@ d3.sankey = function() {
     }
 
     function initializeNodeDepth() {
-      var ky = d3.min(nodesByBreadth, function(nodes) {
-        return (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, value);
-      });
-
+      var ky = d3.min(nodesByBreadth, nodes => (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, value))
       nodesByBreadth.forEach(function(nodes) {
         nodes.forEach(function(node, i) {
           node.y = i;
-          node.dy = node.value * ky;
+          node.dy = Math.max(node.value * ky, minNodeHeight);
         });
       });
 
@@ -321,10 +364,10 @@ export default {
     return {}
   },
   mounted() {
-    var units = 'Widgets';
+    var units = 'calls';
     var margin = {top: 10, right: 10, bottom: 10, left: 10},
         width = 1200 - margin.left - margin.right,
-        height = 740 - margin.top - margin.bottom;
+        height = 900 - margin.top - margin.bottom;
     var formatNumber = d3.format(',.0f'),    // zero decimal places
         format = function(d) { return formatNumber(d) + ' ' + units; },
         color = d3.scaleLinear()
@@ -334,13 +377,13 @@ export default {
     var svg = d3.select(this.$refs.canvas).append('svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
-      .attr('viewBox', `0 0  ${width} ${height}`)
+      .attr('viewBox', `0 0  ${width + margin.left + margin.right} ${height}`)
       .append('g')
       .attr('transform',  'translate(' + margin.left + ',' + margin.top + ')');
     
     // Set the sankey diagram properties
     var sankey = d3.sankey()
-      .nodeWidth(36)
+      .nodeWidth(20)
       .nodePadding(10)
       .size([width, height]);
     var path = sankey.link();
@@ -352,7 +395,10 @@ export default {
       }
       let list = response._data._retData.list
       list.forEach((n) => {
-        formatedData.nodes.push({name: n.node_name})
+        formatedData.nodes.push({
+          name: n.node_name,
+          level: ({1:0, 2:1, 3:5, 4:6})[parseInt(n.node_level, 10)]
+        })
         n.next_nodes.forEach((t) => {
           formatedData.links.push({
             source: n.node_name,
@@ -365,6 +411,7 @@ export default {
       // let formatedData = response
       var nodeMap = {};
       formatedData.nodes.forEach(function(x) { nodeMap[x.name] = x; });
+      console.info('nodemap', nodeMap)
       formatedData.links = formatedData.links.map(function(x) {
         return {
           source: nodeMap[x.source],
@@ -372,7 +419,7 @@ export default {
           value: x.value
         };
       });
-      console.info('111')
+      console.info('111', formatedData)
       sankey
         .nodes(formatedData.nodes)
         .links(formatedData.links)
@@ -403,7 +450,7 @@ export default {
       console.info('node-----------------', node)
       // add the rectangles for the nodes
       node.append('rect')
-        .attr('height', function(d) { return d.dy; })
+        .attr('height', d => d.dy)
         .attr('width', sankey.nodeWidth())
         .style('fill', function(d) { 
           return d.color = color(d.name.replace(/ .*/, ''));
@@ -419,7 +466,7 @@ export default {
     // add in the title for the nodes
       node.append('text')
         .attr('x', -6)
-        .attr('y', function(d) { return d.dy / 2; })
+        .attr('y', d => d.dy / 2)
         .attr('dy', '.35em')
         .attr('text-anchor', 'end')
         .attr('transform', null)
@@ -455,16 +502,19 @@ export default {
 }
 .node rect {
   cursor: move;
-  fill-opacity: .9;
+  fill-opacity: .25;
   shape-rendering: crispEdges;
+  &:hover {
+    fill-opacity: .5;
+  }
 }
 .node text {
   pointer-events: none;
-  text-shadow: 0 1px 0 #fff;
+  font-size 18px
 }
 .link {
   fill: none;
-  stroke: #000;
+  stroke: #008600;
   stroke-opacity: .2;
 }
 .link:hover {
