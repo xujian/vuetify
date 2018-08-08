@@ -131,52 +131,58 @@ let sankey = function() {
     // 似乎是判定node横轴位置
     function computeNodeBreadths() {
       nodes.forEach((item) => {
-        item.x = item.level
         item.dx = nodeWidth
       })
       console.info('pre-level2', nodes)
-      // 查找level=2平级之间互相调用
-      let level2 = nodes.filter(n => n.level === 1)
-      level2.forEach(n => { // 降级 level 2 -> 3
-        if (links.some(l => l.target.name === n.name && l.source.level >= 1)) {
-          console.info('LEVEL DOWN 3', n)
-          n.level = 2
+      /**
+       * 寻找并定义\
+       * 最左侧 只出不进  level = 0
+       * 最左侧 只出不进  level = 4
+       * */
+      nodes.forEach(n => {
+        if (n.sourceLinks.length === 0) {
+          n.level = 0
+        } else if (n.targetLinks.length === 0) {
+          n.level = 4
+        } else {
+          n.level = 1
         }
       })
-      let level3 = nodes.filter(n => n.level === 2)
-      level3.forEach(n => {
-        links.forEach(l => {
-          if(l.target.name === n.name) {
-            console.info('level3 links------------', l.source.level)
-            if (l.source.level >= 2) {
-              console.info('LEVEL DOWN 4', n)
-              n.level = 3
-            }
+      let levels = {}
+      splitLevel(1)
+      splitLevel(2)
+
+      // 拆分第二层
+      // 查找level=2平级之间互相调用
+      function splitLevel (x) {
+        levels[x] = nodes.filter(n => n.level === x)
+        let sourceValues = levels[x].map(n => 
+          n.sourceLinks.map(l => l.value).reduce((a, b) => a + b)
+        )
+        let middleValue = sourceValues.sort((a, b) => a < b)[Math.floor(sourceValues.length / 2)]
+        levels[x].forEach(n => { // 降级 level 2 -> 3
+          if (n.sourceLinks.some(s => s.source.level === x && s.value > middleValue)) {
+            n.level = x + 1
           }
         })
-      })
+        levels[x + 1] = nodes.filter(n => n.level === x + 1)
+      }
       // check same level calls
       // 检查同级调用
-      let circles = []
-      level3.forEach(n => {
-        n.sourceLinks.forEach(l => {
-          if (l.target.level === 3) {
-            l.circuit = 1
-            if (!circles.find(c => c.id === l.id)) {
-              circles.push(l)
+      [2,3].forEach(x => {
+        levels[x].forEach(n => {
+          n.sourceLinks.forEach(l => {
+            if (l.target.level === x) {
+              l.circuit = 1
             }
-          }
-        })
-        n.targetLinks.forEach(l => {
-          if (l.source.level === 3) {
-            l.circuit = 1
-            if (!circles.find(c => c.id === l.id)) {
-              circles.push(l)
+          })
+          n.targetLinks.forEach(l => {
+            if (l.source.level === x) {
+              l.circuit = 1
             }
-          }
+          })
         })
       })
-      console.info('circles----------------OOOOOO', circles)
       /*var remainingNodes = nodes,
           nextNodes,
           index = 0,
@@ -194,7 +200,6 @@ let sankey = function() {
             }
           });
         });
-        console.info('computeNodeBreadths:nodes:after 1 loop', x, JSON.stringify(remainingNodes))
         remainingNodes = index > 3 ? [] : nextNodes;
         ++x;
       }*/
