@@ -6,7 +6,7 @@
 
 <script>
 import LineChart from '@/components/charts/line'
-import SankeyChart from '@/components/charts/sankey'
+import SankeyChart from '@/components/charts/sankey/index'
 
 export default {
   components: {
