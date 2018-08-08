@@ -22,9 +22,9 @@ export default {
         width = 1200 - margin.left - margin.right,
         height = 900 - margin.top - margin.bottom;
     var formatNumber = d3.format(',.0f'),    // zero decimal places
-        format = function(d) { return formatNumber(d) + ' ' + units; },
-        color = d3.scaleLinear().domain([10, 100])
-          .range(["brown", "steelblue"]);
+        formatValue = d => formatNumber(d) + ' ' + units,
+        healthyColor = d3.scaleLinear().domain([0, 90, 95, 100])
+          .range(['#f00', '#999900', '#99ff00', '#23d160']);
     // append the svg canvas to the page
     var svg = d3.select(this.$refs.canvas)
       .attr('width', width + margin.left + margin.right)
@@ -53,25 +53,23 @@ export default {
           name: n.node_name,
           level: ({1:0, 2:1, 3:4})[parseInt(n.node_level, 10)]
         })
-        n.next_nodes.forEach((t) => {
+        n.next_nodes.forEach((t, i) => {
           formatedData.links.push({
             source: n.node_name,
             target: t.node_name,
-            value: t.call_count,
-            time: t.average_time
+            value: Math.max(100000, t.call_count), // 虚拟value TODO: 需计算call count base 避免线条过细
+            calls: t.call_count,
+            time: t.average_time,
+            healthy: t.success_rate
           })
         })
       })
       // let formatedData = response
       var nodeMap = {};
       formatedData.nodes.forEach(function(x) { nodeMap[x.name] = x; });
-      console.info('nodemap', nodeMap)
-      formatedData.links = formatedData.links.map(function(x) {
-        return {
-          source: nodeMap[x.source],
-          target: nodeMap[x.target],
-          value: x.value
-        };
+      formatedData.links.forEach(l => {
+          l['source'] = nodeMap[l.source];
+          l['target'] = nodeMap[l.target];
       });
       console.info('111', formatedData)
       sankey
@@ -85,11 +83,15 @@ export default {
         .enter().append('path')
         .attr('class', 'link')
         .attr('d', sankey.link())
-        .style('stroke-width', d => Math.max(1, d.dy))
+        .style('stroke-width', d => Math.max(1, d.dy)) // 线条宽度
+        .style('stroke', d => healthyColor(d.healthy)) // 线条颜色 == 调用成功率
         .sort((a, b) => b.dy - a.dy);
     
     // add the link titles
-      link.append('title').text(d => d.source.name + ' → ' +  d.target.name + '\n' + format(d.value));
+      link.append('title').text(d => 
+        d.source.name + ' → ' +  d.target.name + '\n' + formatValue(d.calls) + '\n' +
+        'healthy: ' + d.healthy
+      );
     
     // add in the nodes
       var node = svg.append('g').selectAll('.node')
@@ -110,7 +112,7 @@ export default {
         // })
         node.append('title')
         .text(function(d) { 
-          return d.name + '\n' + format(d.value);
+          return d.name + '\n' + formatValue(d.calls);
         });
     
     // add in the title for the nodes
@@ -152,11 +154,12 @@ export default {
 }
 .node rect {
   cursor: move;
-  fill-opacity: .25;
+  fill: #006338
+  fill-opacity: .75;
   stroke: #000;
   shape-rendering: crispEdges;
   &:hover {
-    fill-opacity: .5;
+    fill-opacity: 1;
   }
 }
 .node text {

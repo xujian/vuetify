@@ -83,7 +83,7 @@ let sankey = function() {
               endX = d.target.x,
               endY = d.target.y + d.ty + d.dy / 2,
               xi = d3.interpolateNumber(startX, endX),
-              startControlX = startX + Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2) // 右出左进
+              startControlX = startX + Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2) // 始终左进右出
               startControlY = startY,
               endControlX = startX - Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2)
               endControlY = endY + (d.target.x - d.source.x)
@@ -118,10 +118,9 @@ let sankey = function() {
     // Compute the value (size) of each node by summing the associated links.
     function computeNodeValues() {
       nodes.forEach(function(node) {
-        node.value = Math.max(
-          d3.sum(node.sourceLinks, value),
-          d3.sum(node.targetLinks, value)
-        );
+        node.in  = d3.sum(node.sourceLinks, value) // 入流量
+        node.out = d3.sum(node.targetLinks, value) // 出流量
+        node.value = Math.max(node.in, node.out)
       });
     }
   
@@ -228,10 +227,10 @@ let sankey = function() {
   
     function computeNodeDepths(iterations) {
       var nodesByBreadth = d3.nest()
-        .key(function(d) { return d.x; })
+        .key(d => d.x)
         .sortKeys(d3.ascending)
         .entries(nodes)
-        .map(function(d) { return d.values; });
+        .map(d => d.values);
         console.info('computeNodeDepths-////////////////////', nodesByBreadth)
       initializeNodeDepth();
       resolveCollisions();
@@ -242,21 +241,21 @@ let sankey = function() {
         relaxLeftToRight(alpha);
         resolveCollisions();
       }
-  
       function initializeNodeDepth() {
-        var ky = d3.min(nodesByBreadth, nodes => (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, value))
+        var ky = d3.min(nodesByBreadth, 
+          nodes => (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, value)
+        )
+        console.info('initializeNodeDepth====***************ky', ky)
         nodesByBreadth.forEach(function(nodes) {
           nodes.forEach(function(node, i) {
             node.y = i;
             node.dy = Math.max(node.value * ky, minNodeHeight);
           });
         });
-  
-        links.forEach(function(link) {
-          link.dy = link.value * ky;
+        links.forEach(link => {
+          link.dy = link.value * ky
         });
       }
-  
       function relaxLeftToRight(alpha) {
         nodesByBreadth.forEach(function(nodes, breadth) {
           nodes.forEach(function(node) {
@@ -266,12 +265,10 @@ let sankey = function() {
             }
           });
         });
-  
         function weightedSource(link) {
           return center(link.source) * link.value;
         }
       }
-  
       function relaxRightToLeft(alpha) {
         nodesByBreadth.slice().reverse().forEach(function(nodes) {
           nodes.forEach(function(node) {
@@ -281,20 +278,17 @@ let sankey = function() {
             }
           });
         });
-  
         function weightedTarget(link) {
           return center(link.target) * link.value;
         }
       }
-  
       function resolveCollisions() {
         nodesByBreadth.forEach(function(nodes) {
           var node,
-              dy,
-              y0 = 0,
-              n = nodes.length,
-              i;
-  
+            dy,
+            y0 = 0,
+            n = nodes.length,
+            i;
           // Push any overlapping nodes down.
           nodes.sort(ascendingDepth);
           for (i = 0; i < n; ++i) {
@@ -319,33 +313,30 @@ let sankey = function() {
           }
         });
       }
-  
       function ascendingDepth(a, b) {
         return a.y - b.y;
       }
-    }
+    } // computeNodeDepths
   
     function computeLinkDepths() {
       nodes.forEach(function(node) {
         node.sourceLinks.sort(ascendingTargetDepth);
         node.targetLinks.sort(ascendingSourceDepth);
       });
-      nodes.forEach(function(node) {
+      nodes.forEach(function(node) { // 计算links Y 位置
         var sy = 0, ty = 0;
-        node.sourceLinks.forEach(function(link) {
+        node.sourceLinks.forEach(link => {
           link.sy = sy;
           sy += link.dy;
         });
-        node.targetLinks.forEach(function(link) {
+        node.targetLinks.forEach(link => {
           link.ty = ty;
           ty += link.dy;
         });
       });
-  
       function ascendingSourceDepth(a, b) {
         return a.source.y - b.source.y;
       }
-  
       function ascendingTargetDepth(a, b) {
         return a.target.y - b.target.y;
       }
