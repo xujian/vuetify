@@ -1,43 +1,49 @@
 <template>
-  <div class='canvas'>
-    <svg ref='canvas'>
-    </svg>
-  </div>
+  <hsb-svg :width="width">
+    <g ref="root"></g>
+  </hsb-svg>
 </template>
 
 <script>
 import * as d3 from 'd3';
 import engine from '@/lib/sankey';
+import HsbSvg from '@/components/svg'
 import {json} from 'd3-fetch';
 import axios from 'axios'
 
 export default {
   name: 'sankey-chart',
+  props: {
+    width: {
+      type: Number,
+      default: 1600
+    },
+    height: {
+      type: Number,
+      default: 1200
+    },
+    levels: {
+      type: Number,
+      default: 4
+    },
+  },
   data() {
     return {}
   },
   mounted() {
     var units = 'calls';
-    var margin = {top: 10, right: 10, bottom: 10, left: 10},
-        width = 1200 - margin.left - margin.right,
-        height = 900 - margin.top - margin.bottom;
     var formatNumber = d3.format(',.0f'),    // zero decimal places
         formatValue = d => formatNumber(d) + ' ' + units,
         healthyColor = d3.scaleLinear().domain([0, 90, 95, 100])
           .range(['#f00', '#999900', '#99ff00', '#23d160']);
     // append the svg canvas to the page
-    var svg = d3.select(this.$refs.canvas)
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .attr('viewBox', `0 0  ${width + 80} ${height}`)
-      .append('g')
-      .attr('transform',  'translate(' + margin.left + ',' + margin.top + ')');
+    var root = d3.select(this.$refs.root)
     
     // Set the sankey diagram properties
     var sankey = engine()
       .nodeWidth(20)
       .nodePadding(10)
-      .size([width, height]);
+      .size([this.width, this.height]);
     
     json('/static/servers.json').then(function(response) {
       let formatedData = {
@@ -75,7 +81,7 @@ export default {
         .layout(32);
       console.info('222')
       // add in the links
-      var link = svg.append('g').selectAll('.link')
+      var link = root.append('g').selectAll('.link')
         .data(formatedData.links)
         .enter().append('path')
         .attr('class', 'link')
@@ -86,12 +92,12 @@ export default {
     
     // add the link titles
       link.append('title').text(d => 
-        d.source.name + ' → ' +  d.target.name + '\n' + formatValue(d.calls) + '\n' +
+        d.source.name + ' → ' +  d.target.name + '\n' + formatValue(d.value) + '\n' +
         'healthy: ' + d.healthy
       );
     
     // add in the nodes
-      var node = svg.append('g').selectAll('.node')
+      var node = root.append('g').selectAll('.node')
         .data(formatedData.nodes)
         .enter().append('g')
         .attr('class', 'node')
@@ -120,7 +126,7 @@ export default {
         .attr('text-anchor', 'end')
         .attr('transform', null)
         .text(d => `${d.name.substr(-20)} (${d.level})`)
-        .filter(function(d) { return d.x < width / 2; })
+        .filter(function(d) { return d.x < this.width / 2; })
         .attr('x', 6 + sankey.nodeWidth())
         .attr('text-anchor', 'start');
     
@@ -128,9 +134,9 @@ export default {
       function dragmove(d) {
         d3.select(this).attr('transform', 
             'translate(' + (
-                d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
+                d.x = Math.max(0, Math.min(this.width - d.dx, d3.event.x))
               ) + ',' + (
-                      d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
+                      d.y = Math.max(0, Math.min(this.height - d.dy, d3.event.y))
                 ) + ')');
         sankey.relayout();
         link.attr('d', sankey.link());
@@ -139,19 +145,16 @@ export default {
   },// mounted
   methods: {
   },
+  components: {
+    HsbSvg
+  }
 };
 </script>
 
 <style lang='stylus'>
-.canvas {
-  height 500px
-  svg {
-    width 100%
-  }
-}
 .node rect {
   cursor: move;
-  fill: #006338
+  fill: #006338;
   fill-opacity: .75;
   stroke: #000;
   shape-rendering: crispEdges;
@@ -161,7 +164,7 @@ export default {
 }
 .node text {
   pointer-events: none;
-  font-size 18px
+  font-size 18px;
 }
 .link {
   fill: none;

@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 
 let sankey = function() {
     var sankey = {},
-        width = 1200,
+        width = 1600,
         nodeWidth = 20,
         nodePadding = 20,
         minNodeHeight = 10,
@@ -63,6 +63,9 @@ let sankey = function() {
       return sankey;
     };
   
+    /**
+     * 绘制 link path
+     */
     sankey.link = function() {
       function link(d) {
         if (!d.circuit) {
@@ -135,41 +138,59 @@ let sankey = function() {
       })
       console.info('pre-level2', nodes)
       /**
-       * 寻找并定义\
+       * 寻找并定义
        * 最左侧 只出不进  level = 0
        * 最左侧 只出不进  level = 4
        * */
       nodes.forEach(n => {
-        if (n.sourceLinks.length === 0) {
+        if (n.sourceLinks.length === 0) { // 只出不进的节点归最左侧
           n.level = 0
-        } else if (n.targetLinks.length === 0) {
-          n.level = 4
-        } else {
+        }
+       })
+       nodes.filter(n => n.level !== 0).forEach(n => { // 接着处理其他节点
+         if (n.targetLinks.length === 0) { // 只进不出的节点 终点
+          if (n.sourceLinks.every(l => {l.source.level === 0})) { // 只有第一级流量的节点
+            n.level = 1
+            n.settled = true
+          } else {
+            n.level = 4
+          }
+        } else { // 剩下的中间节点 (有进有出) 先归到 level 1
           n.level = 1
         }
       })
       let levels = {}
       splitLevel(1)
       splitLevel(2)
+      //[2].forEach(checkInnerLevelCalls)
 
       // 拆分第二层
       // 查找level=2平级之间互相调用
       function splitLevel (x) {
         levels[x] = nodes.filter(n => n.level === x)
-        let sourceValues = levels[x].map(n => 
-          n.sourceLinks.map(l => l.value).reduce((a, b) => a + b)
+        console.info('splitLevel-------level=', x, levels[x])
+        // 计算每一 node 所属 link value 总和的中位数
+        let sourceValues = levels[x].map(n => {
+            console.info('>>>>>>>>>>>>>>>>>>>>>', n.name, n.sourceLinks.length)
+            return n.sourceLinks.length === 0 ? 0 : n.sourceLinks.map(l => l.value).reduce((a, b) => a + b)
+          }
         )
-        let middleValue = sourceValues.sort((a, b) => a < b)[Math.floor(sourceValues.length / 2)]
+        sourceValues = sourceValues.sort((a, b) => a < b)
+        let middleValue = sourceValues[Math.floor(sourceValues.length / 2)]
         levels[x].forEach(n => { // 降级 level 2 -> 3
-          if (n.sourceLinks.some(s => s.source.level === x && s.value > middleValue)) {
+          if (n.sourceLinks.some(s => s.source.level === x 
+              && s.value > middleValue
+              && n.settled !== true
+            )) {
             n.level = x + 1
           }
         })
         levels[x + 1] = nodes.filter(n => n.level === x + 1)
       }
+
       // check same level calls
       // 检查同级调用
-      [2,3].forEach(x => {
+      function checkInnerLevelCalls (x) {
         levels[x].forEach(n => {
           n.sourceLinks.forEach(l => {
             if (l.target.level === x) {
@@ -182,7 +203,7 @@ let sankey = function() {
             }
           })
         })
-      })
+      }
       /*var remainingNodes = nodes,
           nextNodes,
           index = 0,
@@ -204,7 +225,7 @@ let sankey = function() {
         ++x;
       }*/
       // moveSinksRight(x);
-      scaleNodeBreadths(1200 / 4);
+      scaleNodeBreadths(1600 / 4);
       console.info('computeNodeBreadths', nodes)
     }
   
