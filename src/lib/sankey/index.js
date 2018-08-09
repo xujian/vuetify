@@ -162,7 +162,7 @@ let sankey = function() {
       let levels = {}
       splitLevel(1)
       splitLevel(2)
-      //[2].forEach(checkInnerLevelCalls)
+      // [2].forEach(x => { checkInnerLevelCalls(x)})
 
       // 拆分第二层
       // 查找level=2平级之间互相调用

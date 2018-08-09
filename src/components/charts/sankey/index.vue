@@ -1,7 +1,11 @@
 <template>
-  <hsb-svg :width="width">
-    <g ref="root"></g>
-  </hsb-svg>
+  <div class="sankey-page page">
+    <h1>服务器调用关系图</h1>
+    <p>&nbsp;</p>
+    <hsb-svg :width="width" :height="height">
+      <g ref="root"></g>
+    </hsb-svg>
+  </div>
 </template>
 
 <script>
@@ -31,15 +35,12 @@ export default {
     return {}
   },
   mounted() {
-    var units = 'calls';
-    var formatNumber = d3.format(',.0f'),    // zero decimal places
-        formatValue = d => formatNumber(d) + ' ' + units,
-        healthyColor = d3.scaleLinear().domain([0, 90, 95, 100])
-          .range(['#f00', '#999900', '#99ff00', '#23d160']);
-    // append the svg canvas to the page
+    var units = 'calls', 
+      formatNumber = d3.format(',.0f'),    // zero decimal places
+      formatValue = d => formatNumber(d) + ' ' + units,
+      healthyColor = d3.scaleLinear().domain([0, 90, 95, 100])
+        .range(['#f00', '#999900', '#99ff00', '#23d160']);
     var root = d3.select(this.$refs.root)
-    
-    // Set the sankey diagram properties
     var sankey = engine()
       .nodeWidth(20)
       .nodePadding(10)
@@ -172,6 +173,6 @@ export default {
   stroke-opacity: .5;
 }
 .link:hover {
-  stroke-opacity: .75;
+  stroke-opacity: 1;
 }
 </style>
