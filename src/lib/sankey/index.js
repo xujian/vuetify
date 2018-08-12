@@ -6,10 +6,10 @@ let sankey = function() {
         nodeWidth = 20,
         nodePadding = 20,
         minNodeHeight = 10,
-        curvature = 0.75,
+        curvature = 0.5,
         size = [1, 1],
         nodes = [],
-        links = [];
+        links = []; 
   
     sankey.nodeWidth = function(_) {
       if (!arguments.length) return nodeWidth;
@@ -89,7 +89,7 @@ let sankey = function() {
               startControlX = startX + Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2) // 始终左进右出
               startControlY = startY,
               endControlX = startX - Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2)
-              endControlY = endY + (d.target.x - d.source.x)
+              endControlY = endY + (Math.min(d.target.x - d.source.x, 150))
           return `M${startX},${startY}C${startControlX},${startControlY} ${endControlX},${endControlY} ${endX},${endY}`
         }
       }
@@ -104,25 +104,21 @@ let sankey = function() {
     // Populate the sourceLinks and targetLinks for each node.
     // Also, if the source and target are not objects, assume they are indices.
     function computeNodeLinks() {
-      nodes.forEach(function(node) {
+      nodes.forEach(node => {
         node.sourceLinks = [];
         node.targetLinks = [];
       });
-      links.forEach(function(link) {
-        var source = link.source,
-            target = link.target;
-        if (typeof source === 'number') source = link.source = nodes[link.source];
-        if (typeof target === 'number') target = link.target = nodes[link.target];
-        source.sourceLinks.push(link);
-        target.targetLinks.push(link);
+      links.forEach(link =>{
+        link.target.sourceLinks.push(link);
+        link.source.targetLinks.push(link);
       });
     }
   
     // Compute the value (size) of each node by summing the associated links.
     function computeNodeValues() {
       nodes.forEach(function(node) {
-        node.in  = d3.sum(node.sourceLinks, value) // 入流量
-        node.out = d3.sum(node.targetLinks, value) // 出流量
+        node.in  = d3.sum(node.sourceLinks, l => l.value) // 入流量
+        node.out = d3.sum(node.targetLinks, l => l.value) // 出流量
         node.value = Math.max(node.in, node.out)
       });
     }
@@ -149,39 +145,38 @@ let sankey = function() {
        })
        nodes.filter(n => n.level !== 0).forEach(n => { // 接着处理其他节点
          if (n.targetLinks.length === 0) { // 只进不出的节点 终点
-          if (n.sourceLinks.every(l => {l.source.level === 0})) { // 只有第一级流量的节点
+          if (n.sourceLinks.every(l => l.source.level === 0)) { // 只有第一级流量的节点
             n.level = 1
-            n.settled = true
           } else {
             n.level = 4
           }
         } else { // 剩下的中间节点 (有进有出) 先归到 level 1
-          n.level = 1
+          n.level = 2
         }
       })
       let levels = {}
-      splitLevel(1)
-      splitLevel(2)
-      // [2].forEach(x => { checkInnerLevelCalls(x)})
+      // splitLevel(1);
+      splitLevel(2);
+      [2, 3].forEach(x => { checkInnerLevelCalls(x)})
 
       // 拆分第二层
       // 查找level=2平级之间互相调用
       function splitLevel (x) {
         levels[x] = nodes.filter(n => n.level === x)
-        console.info('splitLevel-------level=', x, levels[x])
         // 计算每一 node 所属 link value 总和的中位数
         let sourceValues = levels[x].map(n => {
-            console.info('>>>>>>>>>>>>>>>>>>>>>', n.name, n.sourceLinks.length)
             return n.sourceLinks.length === 0 ? 0 : n.sourceLinks.map(l => l.value).reduce((a, b) => a + b)
           }
         )
         sourceValues = sourceValues.sort((a, b) => a < b)
         let middleValue = sourceValues[Math.floor(sourceValues.length / 2)]
         levels[x].forEach(n => { // 降级 level 2 -> 3
-          if (n.sourceLinks.some(s => s.source.level === x 
-              && s.value > middleValue
-              && n.settled !== true
-            )) {
+          if (n.sourceLinks.some(
+            s => s.source.level === x
+            // && s.value > middleValue
+             // && n.settled !== true
+          ) && !n.targetLinks.some(t => t.target.level <= x)
+            ) {
             n.level = x + 1
           }
         })
@@ -225,10 +220,8 @@ let sankey = function() {
         ++x;
       }*/
       // moveSinksRight(x);
-      scaleNodeBreadths(1600 / 4);
-      console.info('computeNodeBreadths', nodes)
+      scaleNodeBreadths();
     }
-  
     function moveSourcesRight() {
       nodes.forEach(function(node) {
         if (!node.targetLinks.length) {
@@ -236,7 +229,6 @@ let sankey = function() {
         }
       });
     }
-  
     function moveSinksRight(x) {
       nodes.forEach(function(node) {
         if (!node.sourceLinks.length) {
@@ -244,16 +236,14 @@ let sankey = function() {
         }
       });
     }
-  
-    function scaleNodeBreadths(kx) {
+    function scaleNodeBreadths() {
       nodes.forEach(function(node) {
-        node.x = node.level * kx;
+        node.x = node.level * (width / 4);
       });
     }
-  
     function computeNodeDepths(iterations) {
       var nodesByBreadth = d3.nest()
-        .key(d => d.x)
+        .key(d => d.level)
         .sortKeys(d3.ascending)
         .entries(nodes)
         .map(d => d.values);
@@ -268,8 +258,9 @@ let sankey = function() {
         resolveCollisions();
       }
       function initializeNodeDepth() {
+        // 计算每一列所占高度
         var ky = d3.min(nodesByBreadth, 
-          nodes => (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, value)
+          nodes => (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, n => n.value)
         )
         console.info('initializeNodeDepth====***************ky', ky)
         nodesByBreadth.forEach(function(nodes) {
@@ -283,52 +274,46 @@ let sankey = function() {
         });
       }
       function relaxLeftToRight(alpha) {
-        nodesByBreadth.forEach(function(nodes, breadth) {
-          nodes.forEach(function(node) {
+        nodesByBreadth.forEach(nodes => {
+          nodes.forEach(node => {
             if (node.targetLinks.length) {
-              var y = d3.sum(node.targetLinks, weightedSource) / d3.sum(node.targetLinks, value);
+              var y = d3.sum(node.targetLinks, link => center(link.source) * link.value) 
+                / d3.sum(node.targetLinks, n => n.value);
               node.y += (y - center(node)) * alpha;
             }
           });
         });
-        function weightedSource(link) {
-          return center(link.source) * link.value;
-        }
       }
       function relaxRightToLeft(alpha) {
         nodesByBreadth.slice().reverse().forEach(function(nodes) {
           nodes.forEach(function(node) {
             if (node.sourceLinks.length) {
-              var y = d3.sum(node.sourceLinks, weightedTarget) / d3.sum(node.sourceLinks, value);
+              var y = d3.sum(node.sourceLinks, link => center(link.target) * link.value) 
+                / d3.sum(node.sourceLinks, l => l.value);
               node.y += (y - center(node)) * alpha;
             }
           });
         });
-        function weightedTarget(link) {
-          return center(link.target) * link.value;
-        }
       }
       function resolveCollisions() {
-        nodesByBreadth.forEach(function(nodes) {
+        nodesByBreadth.forEach(nodes => {
           var node,
             dy,
             y0 = 0,
             n = nodes.length,
             i;
           // Push any overlapping nodes down.
-          nodes.sort(ascendingDepth);
+          nodes.sort((a, b) => a.y - b.y);
           for (i = 0; i < n; ++i) {
             node = nodes[i];
             dy = y0 - node.y;
             if (dy > 0) node.y += dy;
             y0 = node.y + node.dy + nodePadding;
           }
-  
           // If the bottommost node goes outside the bounds, push it back up.
           dy = y0 - nodePadding - size[1];
           if (dy > 0) {
             y0 = node.y -= dy;
-  
             // Push any overlapping nodes back up.
             for (i = n - 2; i >= 0; --i) {
               node = nodes[i];
@@ -339,41 +324,28 @@ let sankey = function() {
           }
         });
       }
-      function ascendingDepth(a, b) {
-        return a.y - b.y;
-      }
     } // computeNodeDepths
-  
+
     function computeLinkDepths() {
-      nodes.forEach(function(node) {
-        node.sourceLinks.sort(ascendingTargetDepth);
-        node.targetLinks.sort(ascendingSourceDepth);
+      nodes.forEach(node => {
+        node.sourceLinks.sort((a, b) => a.source.y - b.source.y);
+        node.targetLinks.sort((a, b) => a.target.y - b.target.y);
       });
-      nodes.forEach(function(node) { // 计算links Y 位置
+      nodes.forEach(node => { // 计算links Y 位置
         var sy = 0, ty = 0;
         node.sourceLinks.forEach(link => {
-          link.sy = sy;
-          sy += link.dy;
-        });
-        node.targetLinks.forEach(link => {
           link.ty = ty;
           ty += link.dy;
         });
+        node.targetLinks.forEach(link => {
+          link.sy = sy;
+          sy += link.dy;
+        });
       });
-      function ascendingSourceDepth(a, b) {
-        return a.source.y - b.source.y;
-      }
-      function ascendingTargetDepth(a, b) {
-        return a.target.y - b.target.y;
-      }
     }
   
     function center(node) {
       return node.y + node.dy / 2;
-    }
-  
-    function value(link) {
-      return link.value;
     }
   
     return sankey;

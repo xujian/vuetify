@@ -111,13 +111,7 @@ export default {
         .attr('class', 'out')
         .attr('height', d => d.dy)
         .attr('width', sankey.nodeWidth())
-        // .style('stroke', function(d) { 
-        //   return d3.rgb(d.color).darker(2); 
-        // })
-        node.append('title')
-        .text(function(d) { 
-          return d.name + '\n' + formatValue(d.calls);
-        });
+        node.append('title').text(d => `${d.name}\nIN: ${formatValue(d.in)} OUT: ${formatValue(d.out)}`);
     
     // add in the title for the nodes
       node.append('text')
@@ -127,7 +121,7 @@ export default {
         .attr('text-anchor', 'end')
         .attr('transform', null)
         .text(d => `${d.name.substr(-20)} (${d.level})`)
-        .filter(function(d) { return d.x < this.width / 2; })
+        .filter(d => d.level === 0)
         .attr('x', 6 + sankey.nodeWidth())
         .attr('text-anchor', 'start');
     
