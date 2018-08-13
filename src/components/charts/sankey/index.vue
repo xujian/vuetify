@@ -88,18 +88,12 @@ export default {
     },
     formatData(value) {
       let initialData = value
-      let nodeMap = {}
-      initialData.nodes.forEach(x => { nodeMap[x.name] = x});
       let healthyColor = d3.scaleLinear()
         .domain([0, 90, 95, 100])
         .range(['#f00', '#999900', '#99ff00', '#23d160'])
       let units = 'calls', 
         formatNumber = d3.format(',.0f'),    // zero decimal places
         formatValue = d => formatNumber(d) + ' ' + units;
-      initialData.links.forEach(l => {
-          l['source'] = nodeMap[l.source];
-          l['target'] = nodeMap[l.target];
-      });
       this.engine
         .nodes(initialData.nodes)
         .links(initialData.links)

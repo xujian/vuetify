@@ -98,11 +98,21 @@ let sankey = function() {
     // Populate the inLinks and outLinks for each node.
     // Also, if the source and target are not objects, assume they are indices.
     function computeNodeLinks() {
+      console.info('computeNodeLinks 1 nodes', nodes)
+      let nodeMap = {}
+      nodes.forEach(x => { nodeMap[x.name] = x});
+      console.info('computeNodeLinks 1 nodeMap', nodeMap)
       nodes.forEach(node => {
         node.inLinks = [];
         node.outLinks = [];
       });
+      links.forEach(l => {
+        l['source'] = nodeMap[l.source];
+        l['target'] = nodeMap[l.target];
+      });
+      console.info('computeNodeLinks', links)
       links.forEach(link => {
+        console.info('computeNodeLinks-----link000', link)
         link.target.inLinks.push(link);
         link.source.outLinks.push(link);
       });

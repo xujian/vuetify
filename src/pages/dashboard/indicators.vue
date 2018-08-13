@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     load() {
-      json('/static/servers.json').then(response => {
+      json('/static/servers-level.json').then(response => {
         let list = response._data._retData.list, links = [], nodes = []
         list.forEach((n) => {
           nodes.push({
