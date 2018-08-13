@@ -9,7 +9,19 @@ let sankey = function() {
         curvature = 0.5,
         size = [1, 1],
         nodes = [],
-        links = []; 
+        links = [],
+        unknowSource = {
+          name: '[Unknow]',
+          x: 0, dx: 0, y: size[1] / 2, dy: 0,
+          level: 0, in: 0, out: 0,
+          inLinks: [], outLinks: []
+        },
+        unknowTarget = {
+          name: '[Unknow]',
+          x: 1600, dx: 0, y: size[1] / 2, dy: 0,
+          level: 4, in: 0, out: 0,
+          inLinks: [], outLinks: []
+        };
   
     sankey.nodeWidth = function(_) {
       if (!arguments.length) return nodeWidth;
@@ -98,21 +110,17 @@ let sankey = function() {
     // Populate the inLinks and outLinks for each node.
     // Also, if the source and target are not objects, assume they are indices.
     function computeNodeLinks() {
-      console.info('computeNodeLinks 1 nodes', nodes)
       let nodeMap = {}
       nodes.forEach(x => { nodeMap[x.name] = x});
-      console.info('computeNodeLinks 1 nodeMap', nodeMap)
       nodes.forEach(node => {
         node.inLinks = [];
         node.outLinks = [];
       });
       links.forEach(l => {
-        l['source'] = nodeMap[l.source];
-        l['target'] = nodeMap[l.target];
+        l['source'] = nodeMap[l.source] || unknowSource
+        l['target'] = nodeMap[l.target] || unknowTarget
       });
-      console.info('computeNodeLinks', links)
       links.forEach(link => {
-        console.info('computeNodeLinks-----link000', link)
         link.target.inLinks.push(link);
         link.source.outLinks.push(link);
       });
@@ -311,6 +319,10 @@ let sankey = function() {
           sy += link.dy;
         });
       });
+      links.forEach(link => {
+        link.ty = link.ty || 0
+        link.sy = link.sy || 0
+      })
     }
   
     function center(node) {
