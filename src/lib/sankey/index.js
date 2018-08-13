@@ -44,17 +44,11 @@ let sankey = function() {
     };
   
     sankey.layout = function(iterations) {
-      console.info('112')
       computeNodeLinks();
-      console.info('113')
       computeNodeValues();
-      console.info('114')
       computeNodeBreadths();
-      console.info('115')
       computeNodeDepths(iterations);
-      console.info('116')
       computeLinkDepths();
-      console.info('117')
       return sankey;
     };
   
@@ -101,24 +95,24 @@ let sankey = function() {
       return link;
     };
   
-    // Populate the sourceLinks and targetLinks for each node.
+    // Populate the inLinks and outLinks for each node.
     // Also, if the source and target are not objects, assume they are indices.
     function computeNodeLinks() {
       nodes.forEach(node => {
-        node.sourceLinks = [];
-        node.targetLinks = [];
+        node.inLinks = [];
+        node.outLinks = [];
       });
-      links.forEach(link =>{
-        link.target.sourceLinks.push(link);
-        link.source.targetLinks.push(link);
+      links.forEach(link => {
+        link.target.inLinks.push(link);
+        link.source.outLinks.push(link);
       });
     }
   
     // Compute the value (size) of each node by summing the associated links.
     function computeNodeValues() {
       nodes.forEach(function(node) {
-        node.in  = d3.sum(node.sourceLinks, l => l.value) // 入流量
-        node.out = d3.sum(node.targetLinks, l => l.value) // 出流量
+        node.in  = d3.sum(node.inLinks, l => l.value) // 入流量
+        node.out = d3.sum(node.outLinks, l => l.value) // 出流量
         node.value = Math.max(node.in, node.out)
       });
     }
@@ -132,20 +126,19 @@ let sankey = function() {
       nodes.forEach((item) => {
         item.dx = nodeWidth
       })
-      console.info('pre-level2', nodes)
       /**
        * 寻找并定义
        * 最左侧 只出不进  level = 0
        * 最左侧 只出不进  level = 4
        * */
       nodes.forEach(n => {
-        if (n.sourceLinks.length === 0) { // 只出不进的节点归最左侧
+        if (n.inLinks.length === 0) { // 只出不进的节点归最左侧
           n.level = 0
         }
        })
        nodes.filter(n => n.level !== 0).forEach(n => { // 接着处理其他节点
-         if (n.targetLinks.length === 0) { // 只进不出的节点 终点
-          if (n.sourceLinks.every(l => l.source.level === 0)) { // 只有第一级流量的节点
+         if (n.outLinks.length === 0) { // 只进不出的节点 终点
+          if (n.inLinks.every(l => l.source.level === 0)) { // 只有第一级流量的节点
             n.level = 1
           } else {
             n.level = 4
@@ -158,6 +151,10 @@ let sankey = function() {
       // splitLevel(1);
       splitLevel(2);
       [2, 3].forEach(x => { checkInnerLevelCalls(x)})
+      nodes.forEach(node => {
+        node.x = node.level * (width / 4)
+        node.dx = nodeWidth
+      });
 
       // 拆分第二层
       // 查找level=2平级之间互相调用
@@ -165,17 +162,17 @@ let sankey = function() {
         levels[x] = nodes.filter(n => n.level === x)
         // 计算每一 node 所属 link value 总和的中位数
         let sourceValues = levels[x].map(n => {
-            return n.sourceLinks.length === 0 ? 0 : n.sourceLinks.map(l => l.value).reduce((a, b) => a + b)
+            return n.inLinks.length === 0 ? 0 : n.inLinks.map(l => l.value).reduce((a, b) => a + b)
           }
         )
         sourceValues = sourceValues.sort((a, b) => a < b)
         let middleValue = sourceValues[Math.floor(sourceValues.length / 2)]
         levels[x].forEach(n => { // 降级 level 2 -> 3
-          if (n.sourceLinks.some(
+          if (n.inLinks.some(
             s => s.source.level === x
             // && s.value > middleValue
              // && n.settled !== true
-          ) && !n.targetLinks.some(t => t.target.level <= x)
+          ) && !n.outLinks.some(t => t.target.level <= x)
             ) {
             n.level = x + 1
           }
@@ -187,70 +184,29 @@ let sankey = function() {
       // 检查同级调用
       function checkInnerLevelCalls (x) {
         levels[x].forEach(n => {
-          n.sourceLinks.forEach(l => {
-            if (l.target.level === x) {
+          n.inLinks.forEach(l => {
+            if (l.source.level === x) {
               l.circuit = 1
             }
           })
-          n.targetLinks.forEach(l => {
-            if (l.source.level === x) {
+          n.outLinks.forEach(l => {
+            if (l.target.level === x) {
               l.circuit = 1
             }
           })
         })
       }
-      /*var remainingNodes = nodes,
-          nextNodes,
-          index = 0,
-          x = 0;
-      console.info('computeNodeBreadths:nodes', remainingNodes)
-      while (remainingNodes.length) {
-        console.info('computeNodeBreadths', index ++)
-        nextNodes = [];
-        remainingNodes.forEach(function(node) {
-          node.x = x;
-          node.dx = nodeWidth;
-          node.sourceLinks.forEach(function(link) { // 集中所有source link
-            if ( !nextNodes.map((item) => {return item.name}).includes(link.target.name)) { // 滤重
-              nextNodes.push(link.target);
-            }
-          });
-        });
-        remainingNodes = index > 3 ? [] : nextNodes;
-        ++x;
-      }*/
-      // moveSinksRight(x);
-      scaleNodeBreadths();
     }
-    function moveSourcesRight() {
-      nodes.forEach(function(node) {
-        if (!node.targetLinks.length) {
-          node.x = d3.min(node.sourceLinks, function(d) { return d.target.x; }) - 1;
-        }
-      });
-    }
-    function moveSinksRight(x) {
-      nodes.forEach(function(node) {
-        if (!node.sourceLinks.length) {
-          node.x = x - 1;
-        }
-      });
-    }
-    function scaleNodeBreadths() {
-      nodes.forEach(function(node) {
-        node.x = node.level * (width / 4);
-      });
-    }
+
+
     function computeNodeDepths(iterations) {
       var nodesByBreadth = d3.nest()
         .key(d => d.level)
         .sortKeys(d3.ascending)
         .entries(nodes)
         .map(d => d.values);
-        console.info('computeNodeDepths-////////////////////', nodesByBreadth)
       initializeNodeDepth();
       resolveCollisions();
-      console.info('computedNodeDepths--------------------', iterations)
       for (var alpha = 1; iterations > 0; --iterations) {
         relaxRightToLeft(alpha *= .99);
         resolveCollisions();
@@ -262,9 +218,8 @@ let sankey = function() {
         var ky = d3.min(nodesByBreadth, 
           nodes => (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, n => n.value)
         )
-        console.info('initializeNodeDepth====***************ky', ky)
-        nodesByBreadth.forEach(function(nodes) {
-          nodes.forEach(function(node, i) {
+        nodesByBreadth.forEach(nodes => {
+          nodes.forEach((node, i) => {
             node.y = i;
             node.dy = Math.max(node.value * ky, minNodeHeight);
           });
@@ -276,21 +231,25 @@ let sankey = function() {
       function relaxLeftToRight(alpha) {
         nodesByBreadth.forEach(nodes => {
           nodes.forEach(node => {
-            if (node.targetLinks.length) {
-              var y = d3.sum(node.targetLinks, link => center(link.source) * link.value) 
-                / d3.sum(node.targetLinks, n => n.value);
+            if (node.outLinks.length) {
+              var y = d3.sum(node.outLinks, link => center(link.source) * link.value) 
+                / d3.sum(node.outLinks, n => n.value);
               node.y += (y - center(node)) * alpha;
+              if (node.name === 'HsbHeZuoWeb') {
+              }
             }
           });
         });
       }
       function relaxRightToLeft(alpha) {
-        nodesByBreadth.slice().reverse().forEach(function(nodes) {
-          nodes.forEach(function(node) {
-            if (node.sourceLinks.length) {
-              var y = d3.sum(node.sourceLinks, link => center(link.target) * link.value) 
-                / d3.sum(node.sourceLinks, l => l.value);
+        nodesByBreadth.slice().reverse().forEach(nodes => {
+          nodes.forEach(node => {
+            if (node.inLinks.length) {
+              var y = d3.sum(node.inLinks, link => center(link.target) * link.value)
+                / d3.sum(node.inLinks, link => link.value);
               node.y += (y - center(node)) * alpha;
+              if (node.name === 'HsbHeZuoWeb') {
+              }
             }
           });
         });
@@ -303,7 +262,7 @@ let sankey = function() {
             n = nodes.length,
             i;
           // Push any overlapping nodes down.
-          nodes.sort((a, b) => a.y - b.y);
+          nodes.sort((a, b) => a.y > b.y);
           for (i = 0; i < n; ++i) {
             node = nodes[i];
             dy = y0 - node.y;
@@ -328,16 +287,16 @@ let sankey = function() {
 
     function computeLinkDepths() {
       nodes.forEach(node => {
-        node.sourceLinks.sort((a, b) => a.source.y - b.source.y);
-        node.targetLinks.sort((a, b) => a.target.y - b.target.y);
+        node.inLinks.sort((a, b) => a.source.y > b.source.y);
+        node.outLinks.sort((a, b) => a.target.y > b.target.y);
       });
       nodes.forEach(node => { // 计算links Y 位置
         var sy = 0, ty = 0;
-        node.sourceLinks.forEach(link => {
+        node.inLinks.forEach(link => {
           link.ty = ty;
           ty += link.dy;
         });
-        node.targetLinks.forEach(link => {
+        node.outLinks.forEach(link => {
           link.sy = sy;
           sy += link.dy;
         });
