@@ -1,0 +1,1433 @@
+{
+    "_data": {
+      "_errCode": 0, 
+      "_errStr": "ok", 
+      "_ret": 0, 
+      "_retData": {
+        "end_time": "2018-08-14 10:52:48", 
+        "list": [
+          {
+            "next_nodes": [
+              {
+                "average_time": 11923.89974195, 
+                "call_count": 379, 
+                "mark_circle": false, 
+                "node_name": "PV_HSBWEAPP_Index_1196", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "PV_HSBWEAPP_Main_1196", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 289.69547503, 
+                "call_count": 2870760, 
+                "mark_circle": false, 
+                "node_name": "HsbApiAgent", 
+                "success_rate": 99.6753
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HsbHeZuoWeb", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 221.89474211, 
+                "call_count": 19, 
+                "mark_circle": false, 
+                "node_name": "OssEvaConfAgent", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 133.92857143, 
+                "call_count": 14, 
+                "node_name": "PubAmcSys", 
+                "success_rate": 85.7143
+              }, 
+              {
+                "average_time": 29.12444776, 
+                "call_count": 155053, 
+                "node_name": "PubProductSys", 
+                "success_rate": 99.9852
+              }
+            ], 
+            "node_level": 2.1, 
+            "node_name": "HjxEvamapSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 405.53070307, 
+                "call_count": 228, 
+                "mark_circle": false, 
+                "node_name": "HsbBookAgent", 
+                "success_rate": 69.2982
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HsbBookConfSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 1648.33333333, 
+                "call_count": 3, 
+                "mark_circle": false, 
+                "node_name": "PV_AOSAPP_Evaluate_1340", 
+                "success_rate": 0.0000
+              }, 
+              {
+                "average_time": 657.0, 
+                "call_count": 1, 
+                "node_name": "PV_AOSAPP_Index_1340", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 2.1, 
+            "node_name": "PV_AOSAPP_Product_1340", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 60096.0, 
+                "call_count": 1, 
+                "mark_circle": false, 
+                "node_name": "PV_AOSAPP_Index_1346", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 2.1, 
+            "node_name": "PV_AOSAPP_Product_1346", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 53099.9, 
+                "call_count": 10, 
+                "mark_circle": false, 
+                "node_name": "PV_IOSAPP_Evaluate_1260", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 2, 
+            "node_name": "PV_IOSAPP_Product_1260", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "HsbBookAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "push.huanjixia.com/push-interface", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 4, 
+            "node_name": "PV_IOSAPP_AssessPrice_1260", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 188.93039032, 
+                "call_count": 589, 
+                "mark_circle": false, 
+                "node_name": "HjxAmcSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 103.08210752, 
+                "call_count": 1157, 
+                "node_name": "HjxChannelSys", 
+                "success_rate": 98.6171
+              }, 
+              {
+                "average_time": 2565.19641969, 
+                "call_count": 2011, 
+                "node_name": "HjxOrderSys", 
+                "success_rate": 96.5191
+              }, 
+              {
+                "average_time": 37.00803052, 
+                "call_count": 498, 
+                "node_name": "HjxProductSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 1701.42301669, 
+                "call_count": 617, 
+                "node_name": "HjxStatSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 136.90633554, 
+                "call_count": 363, 
+                "node_name": "PubPushSys", 
+                "success_rate": 87.6033
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HjxBmAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 69.81379218, 
+                "call_count": 870, 
+                "mark_circle": false, 
+                "node_name": "PubPlaceOrderSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HsbWwwPOAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 69.09308484, 
+                "call_count": 752, 
+                "mark_circle": false, 
+                "node_name": "PubPlaceOrderSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HsbOpenapiPOAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "evaluate", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2.1, 
+            "node_name": "PubProductSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "Hsb2cAppAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 972.21327868, 
+                "call_count": 27804, 
+                "mark_circle": false, 
+                "node_name": "ExternTXCosSys", 
+                "success_rate": 99.9281
+              }, 
+              {
+                "average_time": 50.0, 
+                "call_count": 16, 
+                "node_name": "HjxAndroidStoreApp", 
+                "success_rate": 0.0000
+              }, 
+              {
+                "average_time": 424.64173614, 
+                "call_count": 3493924, 
+                "node_name": "HjxAppAgent", 
+                "success_rate": 99.3564
+              }, 
+              {
+                "average_time": 611.69169225, 
+                "call_count": 394713, 
+                "node_name": "HjxOperationSys", 
+                "success_rate": 98.5825
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HjxAndroidStoreApp", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 3731.0, 
+                "call_count": 1, 
+                "mark_circle": false, 
+                "node_name": "PV_AOSAPP_Success_1340", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 5, 
+            "node_name": "PV_AOSAPP_PlaceOrder_1340", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "ExternXXKSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 15806.0, 
+                "call_count": 1, 
+                "mark_circle": false, 
+                "node_name": "PV_AOSAPP_Index_1399", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "PV_AOSAPP_Main_1399", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 3000.0, 
+                "call_count": 2, 
+                "mark_circle": false, 
+                "node_name": "PV_IOSAPP_Evaluate", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 2, 
+            "node_name": "PV_IOSAPP_Product", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 6, 
+            "node_name": "PV_HSBWEAPP_Success_1196", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 9000.0, 
+                "call_count": 1, 
+                "mark_circle": false, 
+                "node_name": "PV_IOSAPP_Evaluate_1260", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 2, 
+            "node_name": "PV_IOSAPP_Index_1260", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 47.10069236, 
+                "call_count": 288, 
+                "mark_circle": false, 
+                "node_name": "HjxEvamapSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 2305.7169844, 
+                "call_count": 33380, 
+                "node_name": "HjxOrderSys", 
+                "success_rate": 99.9161
+              }, 
+              {
+                "average_time": 132.0, 
+                "call_count": 56, 
+                "node_name": "PubAmcSys", 
+                "success_rate": 89.2857
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HjxKfAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 10551.0, 
+                "call_count": 3, 
+                "mark_circle": false, 
+                "node_name": "PV_HSBWEAPP_Success_1196", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 5, 
+            "node_name": "PV_HSBWEAPP_PlaceOrder_1196", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 40.3377692, 
+                "call_count": 1578, 
+                "mark_circle": false, 
+                "node_name": "HjxChannelSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 934.75692874, 
+                "call_count": 35401, 
+                "node_name": "HjxOrderSys", 
+                "success_rate": 99.9859
+              }, 
+              {
+                "average_time": 119.14285714, 
+                "call_count": 7, 
+                "node_name": "PubAmcSys", 
+                "success_rate": 85.7143
+              }, 
+              {
+                "average_time": 34.71645975, 
+                "call_count": 15317, 
+                "node_name": "PubCloudDetectSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 62.65982445, 
+                "call_count": 5018, 
+                "node_name": "PubEvaluateSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 45.82163655, 
+                "call_count": 15317, 
+                "node_name": "PubProductSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 2075.2, 
+                "call_count": 5, 
+                "node_name": "PubPushSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HjxDpSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "ExternTXCosSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 36666.66666667, 
+                "call_count": 6, 
+                "mark_circle": false, 
+                "node_name": "PV_IOSAPP_AssessPrice_1260", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 3, 
+            "node_name": "PV_IOSAPP_Evaluate_1260", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "ExternYXTSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "PubCloudDetectSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "HsbWwwSFAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "PubPaySys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "PubEvaQuerySys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 0.02072513, 
+                "call_count": 386, 
+                "mark_circle": false, 
+                "node_name": "HsbAtmEvamapSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 0.0, 
+                "call_count": 386, 
+                "node_name": "PubEvaluateSys", 
+                "success_rate": 98.9637
+              }, 
+              {
+                "average_time": 247.31176412, 
+                "call_count": 170, 
+                "node_name": "PubPlaceOrderSys", 
+                "success_rate": 99.4118
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HsbAtmEvaAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 39.66666667, 
+                "call_count": 3, 
+                "mark_circle": false, 
+                "node_name": "HjxAdSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 81.0, 
+                "call_count": 3, 
+                "node_name": "PubAmcSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HjxAccessAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 13778.47916042, 
+                "call_count": 48, 
+                "mark_circle": false, 
+                "node_name": "PV_HSBWEAPP_PlaceOrder_1196", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 4, 
+            "node_name": "PV_HSBWEAPP_Evaluate_1196", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 52.48818502, 
+                "call_count": 458920, 
+                "mark_circle": false, 
+                "node_name": "HjxAmcSys", 
+                "success_rate": 98.6507
+              }, 
+              {
+                "average_time": 101.21778977, 
+                "call_count": 186808, 
+                "node_name": "HjxChannelSys", 
+                "success_rate": 99.9995
+              }, 
+              {
+                "average_time": 49.2173913, 
+                "call_count": 23, 
+                "node_name": "HjxProductSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 53.88495575, 
+                "call_count": 226, 
+                "node_name": "PubAmcSys", 
+                "success_rate": 91.5929
+              }
+            ], 
+            "node_level": 2, 
+            "node_name": "HjxOperationSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 33812.74626269, 
+                "call_count": 67, 
+                "mark_circle": false, 
+                "node_name": "PV_HSBWEAPP_Evaluate_1196", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 3, 
+            "node_name": "PV_HSBWEAPP_Product_1196", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "PubTMSSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "HsbApiAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 241.18518889, 
+                "call_count": 27, 
+                "mark_circle": false, 
+                "node_name": "admin.huishoubao.com.cn/ChannelManage/Add2BChannelAndDefaultUser", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 727.57019206, 
+                "call_count": 15130, 
+                "node_name": "ExternWeixinSys", 
+                "success_rate": 99.7885
+              }, 
+              {
+                "average_time": 166.27469071, 
+                "call_count": 1205, 
+                "node_name": "HjxAmcSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 79.83891065, 
+                "call_count": 33733, 
+                "node_name": "HjxEvamapSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 39.69102225, 
+                "call_count": 13114, 
+                "node_name": "PubAmcSys", 
+                "success_rate": 94.4106
+              }, 
+              {
+                "average_time": 1209.56689141, 
+                "call_count": 2362, 
+                "node_name": "PubPaySys", 
+                "success_rate": 99.8730
+              }, 
+              {
+                "average_time": 320.9983028, 
+                "call_count": 2357, 
+                "node_name": "PubPushSys", 
+                "success_rate": 99.5757
+              }
+            ], 
+            "node_level": 2.1, 
+            "node_name": "HjxChannelSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 5197.43987263, 
+                "call_count": 23907, 
+                "mark_circle": false, 
+                "node_name": "ExternTXCosSys", 
+                "success_rate": 98.2014
+              }, 
+              {
+                "average_time": 993.6697559, 
+                "call_count": 1591134, 
+                "node_name": "HjxAppAgent", 
+                "success_rate": 98.7748
+              }, 
+              {
+                "average_time": 1096.90856466, 
+                "call_count": 109170, 
+                "node_name": "HjxOperationSys", 
+                "success_rate": 97.3299
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HjxIosStoreApp", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "eva_query", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 8484.95152424, 
+                "call_count": 722, 
+                "mark_circle": false, 
+                "node_name": "HjxChannelSys", 
+                "success_rate": 97.6454
+              }, 
+              {
+                "average_time": 20650.84422111, 
+                "call_count": 398, 
+                "node_name": "HjxOrderSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 2.1, 
+            "node_name": "HjxStatSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2.1, 
+            "node_name": "PubAmcSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "HsbSaleWechatAppAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 10658.92728364, 
+                "call_count": 55, 
+                "mark_circle": false, 
+                "node_name": "PV_HSBWEAPP_Product_1196", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 2, 
+            "node_name": "PV_HSBWEAPP_Index_1196", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 1348.0, 
+                "call_count": 1, 
+                "mark_circle": false, 
+                "node_name": "PV_AOSAPP_AssessPrice_1340", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 3, 
+            "node_name": "PV_AOSAPP_Evaluate_1340", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 82443.0, 
+                "call_count": 1, 
+                "mark_circle": false, 
+                "node_name": "PV_AOSAPP_PlaceOrder_1340", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 4, 
+            "node_name": "PV_AOSAPP_AssessPrice_1340", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 1046.82997916, 
+                "call_count": 123214, 
+                "mark_circle": false, 
+                "node_name": "HjxAppAgent", 
+                "success_rate": 98.5196
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HjxIosCustApp", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 1710.33333333, 
+                "call_count": 3, 
+                "mark_circle": false, 
+                "node_name": "PV_AOSAPP_Product_1340", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 2, 
+            "node_name": "PV_AOSAPP_Index_1340", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 10998.0, 
+                "call_count": 1, 
+                "mark_circle": true, 
+                "node_name": "PV_AOSAPP_Product_1346", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 2, 
+            "node_name": "PV_AOSAPP_Index_1346", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 3129.0, 
+                "call_count": 2, 
+                "mark_circle": false, 
+                "node_name": "PV_AOSAPP_Index_1340", 
+                "success_rate": 0.0000
+              }, 
+              {
+                "average_time": 3201.0, 
+                "call_count": 2, 
+                "node_name": "PV_AOSAPP_Product_1340", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "PV_AOSAPP_Main_1340", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 39027.1, 
+                "call_count": 10, 
+                "mark_circle": false, 
+                "node_name": "PV_AOSAPP_Index_1346", 
+                "success_rate": 0.0000
+              }, 
+              {
+                "average_time": 440503.0, 
+                "call_count": 1, 
+                "node_name": "PV_AOSAPP_Product_1346", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "PV_AOSAPP_Main_1346", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "ExternWeixinSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 23.47347913, 
+                "call_count": 1902466, 
+                "mark_circle": false, 
+                "node_name": "evaluate", 
+                "success_rate": 98.5785
+              }, 
+              {
+                "average_time": 4.68061176, 
+                "call_count": 1888676, 
+                "node_name": "eva_query", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 21.93799348, 
+                "call_count": 168816, 
+                "node_name": "PubEvaluateSys", 
+                "success_rate": 98.8396
+              }, 
+              {
+                "average_time": 4.65013491, 
+                "call_count": 1988368, 
+                "node_name": "PubEvaQuerySys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 32.16840062, 
+                "call_count": 3581357, 
+                "node_name": "PubProductSys", 
+                "success_rate": 99.2936
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "CGI", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "clouddp.huanjixia.com/api/service", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2.1, 
+            "node_name": "PubEvaluateSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 371.01947821, 
+                "call_count": 112024, 
+                "mark_circle": false, 
+                "node_name": "Hsb2cAppAgent", 
+                "success_rate": 99.7054
+              }, 
+              {
+                "average_time": 303.41211248, 
+                "call_count": 1354, 
+                "node_name": "HsbWwwSFAgent", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "Hsb2CustIosApp", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2.1, 
+            "node_name": "HjxAmcSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2.1, 
+            "node_name": "HjxAdSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 1968.04734097, 
+                "call_count": 273190, 
+                "mark_circle": false, 
+                "node_name": "Hsb2cAppAgent", 
+                "success_rate": 99.2394
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "Hsb2CustAndroidApp", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 77.04414585, 
+                "call_count": 16126, 
+                "mark_circle": false, 
+                "node_name": "EvaConfSys", 
+                "success_rate": 52.3750
+              }
+            ], 
+            "node_level": 3, 
+            "node_name": "OssEvaConfAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "PV_IOSAPP_Evaluate", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2.1, 
+            "node_name": "PubFileStoreSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2, 
+            "node_name": "HsbAtmEvamapSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2.1, 
+            "node_name": "HjxCloudDetectSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 256.46153846, 
+                "call_count": 364, 
+                "mark_circle": false, 
+                "node_name": "HjxChannelSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 37.4532967, 
+                "call_count": 364, 
+                "node_name": "PubFileStoreSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HjxUploadHeadPicSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 2.1, 
+            "node_name": "HjxProductSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "userserver.huishoubao.com/user_center/login", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "PV_AOSAPP_Product_1399", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "admin.huishoubao.com.cn/ChannelManage/Add2BChannelAndDefaultUser", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 867.24501078, 
+                "call_count": 1328132, 
+                "mark_circle": false, 
+                "node_name": "HsbSaleWechatAppAgent", 
+                "success_rate": 97.3496
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HsbSaleWechatApp", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "ExternMDSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 7723.0, 
+                "call_count": 1, 
+                "mark_circle": false, 
+                "node_name": "PV_AOSAPP_Product_1399", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 2, 
+            "node_name": "PV_AOSAPP_Index_1399", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 687.88971589, 
+                "call_count": 9276, 
+                "mark_circle": false, 
+                "node_name": "clouddp.huanjixia.com/api/service", 
+                "success_rate": 99.9677
+              }, 
+              {
+                "average_time": 734.40416777, 
+                "call_count": 6094, 
+                "node_name": "HjxCloudDetectSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HjxOrderConsumerSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 62.72757475, 
+                "call_count": 301, 
+                "mark_circle": false, 
+                "node_name": "PubProductSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "rpc_product_server", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 0.0, 
+                "call_count": 1, 
+                "mark_circle": false, 
+                "node_name": "PV_IOSAPP_Product", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "PV_IOSAPP_Main", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 209.29684337, 
+                "call_count": 475, 
+                "mark_circle": false, 
+                "node_name": "ExternALDYSys", 
+                "success_rate": 98.3158
+              }, 
+              {
+                "average_time": 96.74795044, 
+                "call_count": 5733, 
+                "node_name": "ExternDHSTSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 172.25493111, 
+                "call_count": 2687, 
+                "node_name": "ExternMDSys", 
+                "success_rate": 0.0000
+              }, 
+              {
+                "average_time": 87.93335901, 
+                "call_count": 2596, 
+                "node_name": "ExternXXKSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 102.56679635, 
+                "call_count": 152589, 
+                "node_name": "ExternYXTSys", 
+                "success_rate": 99.9692
+              }
+            ], 
+            "node_level": 2.1, 
+            "node_name": "PubPushSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 751.08284451, 
+                "call_count": 22947, 
+                "mark_circle": false, 
+                "node_name": "HjxAppAgent", 
+                "success_rate": 99.9956
+              }, 
+              {
+                "average_time": 484.04789833, 
+                "call_count": 209487, 
+                "node_name": "HsbApiAgent", 
+                "success_rate": 99.8745
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HsbWechatApp", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 7499.5, 
+                "call_count": 4, 
+                "mark_circle": false, 
+                "node_name": "PV_IOSAPP_Index_1260", 
+                "success_rate": 0.0000
+              }, 
+              {
+                "average_time": 0.0, 
+                "call_count": 8, 
+                "node_name": "PV_IOSAPP_Product_1260", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "PV_IOSAPP_Main_1260", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 529.29625949, 
+                "call_count": 1324358, 
+                "mark_circle": false, 
+                "node_name": "HjxAppAgent", 
+                "success_rate": 98.1550
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HjxAndroidCustApp", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 926.56779831, 
+                "call_count": 590, 
+                "mark_circle": false, 
+                "node_name": "HsbApiAgent", 
+                "success_rate": 98.9831
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "HsbCloudSaleWechatApp", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "ExternDHSTSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 4, 
+            "node_name": "EvaConfSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 6, 
+            "node_name": "PV_AOSAPP_Success_1340", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 4.06732326, 
+                "call_count": 3654, 
+                "mark_circle": false, 
+                "node_name": "PubEvaluateSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 35.47432493, 
+                "call_count": 1889, 
+                "node_name": "PubProductSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 117.0, 
+                "call_count": 1, 
+                "node_name": "PubTMSSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 2, 
+            "node_name": "PubPlaceOrderSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 40.21351914, 
+                "call_count": 138461, 
+                "mark_circle": false, 
+                "node_name": "HjxAdSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 19.80909058, 
+                "call_count": 4343257, 
+                "node_name": "HjxAmcSys", 
+                "success_rate": 99.7077
+              }, 
+              {
+                "average_time": 59.73267241, 
+                "call_count": 2772239, 
+                "node_name": "HjxChannelSys", 
+                "success_rate": 99.1802
+              }, 
+              {
+                "average_time": 88.55782732, 
+                "call_count": 1241555, 
+                "node_name": "HjxCloudDetectSys", 
+                "success_rate": 99.9936
+              }, 
+              {
+                "average_time": 118.07700084, 
+                "call_count": 659182, 
+                "node_name": "HjxEvamapSys", 
+                "success_rate": 99.7371
+              }, 
+              {
+                "average_time": 190.39665918, 
+                "call_count": 1538167, 
+                "node_name": "HjxOrderSys", 
+                "success_rate": 99.7165
+              }, 
+              {
+                "average_time": 147.20484538, 
+                "call_count": 234292, 
+                "node_name": "HjxProductSys", 
+                "success_rate": 99.7973
+              }, 
+              {
+                "average_time": 61.86131874, 
+                "call_count": 194820, 
+                "node_name": "HjxStatSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 8.84152971, 
+                "call_count": 510312, 
+                "node_name": "PubEvaluateSys", 
+                "success_rate": 99.9971
+              }, 
+              {
+                "average_time": 34.80616837, 
+                "call_count": 40695, 
+                "node_name": "PubFileStoreSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 34.97934942, 
+                "call_count": 510297, 
+                "node_name": "PubProductSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 172.40843543, 
+                "call_count": 111151, 
+                "node_name": "PubPushSys", 
+                "success_rate": 95.5736
+              }, 
+              {
+                "average_time": 21.85076424, 
+                "call_count": 36178, 
+                "node_name": "userserver.huishoubao.com/user_center/login", 
+                "success_rate": 0.0000
+              }
+            ], 
+            "node_level": 2, 
+            "node_name": "HjxAppAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 10.5, 
+                "call_count": 4, 
+                "mark_circle": false, 
+                "node_name": "PubEvaluateSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 87.25, 
+                "call_count": 4, 
+                "node_name": "PubPlaceOrderSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "PubOrderAgent", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 32.99481839, 
+                "call_count": 772, 
+                "mark_circle": false, 
+                "node_name": "PubProductSys", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 1, 
+            "node_name": "PartnerHBDXSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [
+              {
+                "average_time": 98.97967778, 
+                "call_count": 1217243, 
+                "mark_circle": false, 
+                "node_name": "HjxChannelSys", 
+                "success_rate": 99.8056
+              }, 
+              {
+                "average_time": 135.61035507, 
+                "call_count": 12401, 
+                "node_name": "HjxEvamapSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 41.58674586, 
+                "call_count": 318915, 
+                "node_name": "HjxProductSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 20.1368431, 
+                "call_count": 19475, 
+                "node_name": "PubEvaluateSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 1095.42746471, 
+                "call_count": 7224, 
+                "node_name": "PubPaySys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 47.22648364, 
+                "call_count": 524264, 
+                "node_name": "PubProductSys", 
+                "success_rate": 100.0000
+              }, 
+              {
+                "average_time": 234.67906977, 
+                "call_count": 215, 
+                "node_name": "push.huanjixia.com/push-interface", 
+                "success_rate": 100.0000
+              }
+            ], 
+            "node_level": 2.1, 
+            "node_name": "HjxOrderSys", 
+            "node_pos": -1
+          }, 
+          {
+            "next_nodes": [], 
+            "node_level": 3, 
+            "node_name": "ExternALDYSys", 
+            "node_pos": -1
+          }
+        ], 
+        "start_time": "2018-08-09 00:00:00"
+      }
+    }, 
+    "_head": {
+      "_interface": "/server/get_app_node_graph", 
+      "_msgType": "response", 
+      "_remark": "", 
+      "_timestamps": 1534215173.256609, 
+      "_version": "1.0.0"
+    }
+  }
+  

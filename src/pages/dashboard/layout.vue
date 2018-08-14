@@ -6,8 +6,6 @@
         color="primary"
         dark
     >
-      <v-toolbar-title class="pl-2">Dashboard</v-toolbar-title>
-      <v-spacer></v-spacer>
       <v-tabs
           v-model="tabs"
           color="transparent"
@@ -42,9 +40,8 @@ export default {
   return {
     tabs: null,
     tabsItems: [
-    { id: 1, title: "Indicators", link: "indicators" },
-    { id: 2, title: "Backup", link: "backup" },
-    { id: 3, title: "Logs", link: "logs" }
+    { id: 1, title: "调用拓扑", link: "calls" },
+    { id: 2, title: "关键路径", link: "conversions" }
     ]
   };
   }

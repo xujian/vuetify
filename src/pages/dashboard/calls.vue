@@ -1,6 +1,6 @@
 <template>
   <div class="sankey-page page">
-    <h1>服务器调用关系图</h1>
+    <h1>应用调用关系图</h1>
     <p>&nbsp;</p>
     <sankey-chart :value="sankeyData"></sankey-chart>
   </div>
@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     load() {
-      json('/static/servers-level.json').then(response => {
+      json('/static/servers-today.json').then(response => {
         let list = response._data._retData.list, links = [], nodes = []
         list.forEach((n) => {
           nodes.push({

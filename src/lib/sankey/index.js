@@ -117,8 +117,8 @@ let sankey = function() {
         node.outLinks = [];
       });
       links.forEach(l => {
-        l['source'] = nodeMap[l.source] || unknowSource
-        l['target'] = nodeMap[l.target] || unknowTarget
+        l.source = nodeMap[l.source] || l.source
+        l.target = nodeMap[l.target] || l.target
       });
       links.forEach(link => {
         link.target.inLinks.push(link);

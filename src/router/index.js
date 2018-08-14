@@ -14,14 +14,14 @@ const routes = [{
     name: 'dashboard',
     component: () => import ('@/pages/dashboard/layout'),
     children: [{
-        path: 'indicators',
-        name: 'dashboard.indicators',
-        component: () => import ('@/pages/dashboard/indicators')
+        path: 'calls',
+        name: 'dashboard.calls',
+        component: () => import ('@/pages/dashboard/calls')
       },
       {
-        path: 'backup',
-        name: 'dashboard.backup',
-        component: () => import ('@/pages/dashboard/backup')
+        path: 'conversions',
+        name: 'dashboard.conversions',
+        component: () => import ('@/pages/dashboard/conversions')
       },
       {
         path: 'logs',

@@ -34,7 +34,7 @@
       <span>2 unread notifications</span>
     </v-tooltip>
 
-    <v-menu bottom left>
+    <v-menu bottom left v-if="false">
       <v-btn icon slot="activator">
         <v-avatar class="white" size="32">
           <v-icon color="primary">person</v-icon>
@@ -89,7 +89,7 @@ export default {
       searching: false,
       tabs: null,
       menuItems: [
-        'Vue', 'NodeJS', 'Laravel'
+        'DA'
       ],
       tabsItems: [{
           id: 1,
