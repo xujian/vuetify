@@ -99,21 +99,11 @@ export default {
       miniVariant: false,
       analyticsItems: [{
           icon: 'dashboard',
-          title: 'Dashboard',
-          link: '/dashboard/indicators'
-        },
-        {
-          icon: 'event',
-          title: 'Events',
-          link: ''
-        },
-        {
-          icon: 'comment',
-          title: 'Notifications',
-          link: ''
+          title: '应用关系图',
+          link: '/dashboard/calls'
         }
       ],
-      developItems: [{
+      developItems: [/*{
           icon: 'supervisor_account',
           title: 'Authentification',
           link: ''
@@ -137,7 +127,7 @@ export default {
           icon: 'functions',
           title: 'Functions',
           link: ''
-        }
+        }*/
       ] 
     }
   },
