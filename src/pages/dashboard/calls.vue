@@ -25,8 +25,8 @@ export default {
   },
   methods: {
     load() {
-      json('/static/servers-today.json').then(response => {
-        let list = response._data._retData.list, links = [], nodes = []
+      this.$api.call('/calls').then(response => {
+        let list = response.list, links = [], nodes = []
         list.forEach((n) => {
           nodes.push({
             name: n.node_name,

@@ -6,10 +6,12 @@ import router from './router'
 import Vuetify from 'vuetify'
 
 import store from './store'
+import api from './services/api'
 
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(Vuetify)
+Vue.use(api)
 
 Vue.config.productionTip = false
 

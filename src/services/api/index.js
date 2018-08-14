@@ -1,4 +1,5 @@
 import axios from 'axios'
+import mappings from './mappings'
 
 let __match = function (path, pattern) {
   let params = []
@@ -67,7 +68,7 @@ let __trans = function (fields, row) {
 let __call = (path, options) => {
   console.info('%c$api.call==========path=' + path + '%c, options: ', 'background-color:#009688',
     'background-color:#e57373;font-weight:500')
-  axios.defaults.baseURL = 'http://lrolap.huishoubao.com'
+  axios.defaults.baseURL = 'http://private-ad174-mikejianxu.apiary-mock.com'
   let vm = this
   options = options || {}
   options.data = options.data || {}
@@ -98,9 +99,6 @@ let __call = (path, options) => {
   if (mapped !== null) {
     mapped.method = mapped.method || 'get'
   }
-  this.beforeMatchCallbcks.forEach((f) => {
-    options.data = f.call(this, options.data)
-  })
   if (options.data.order_by) {
     // 处理order_by字段, 换成后台真实字段
     if (mapped.fields) {
@@ -179,7 +177,7 @@ let __call = (path, options) => {
     request.url = mapped.to
     request.fields = mapped.fields || []
   }
-  vm.$bus.$emit('ajaxRequest')
+  // vm.$bus.$emit('ajaxRequest')
   axios.interceptors.request.use((config) => {
     let token = localStorage.getItem('token')
     config.headers['token'] = token
@@ -189,14 +187,15 @@ let __call = (path, options) => {
   })
   return new Promise((resolve, reject) => {
     axios(request).then(res => {
+      console.info('response', res)
       let { data: response } = res
       setTimeout(function () {
-        vm.$bus.$emit('ajaxResponse')
+        // vm.$bus.$emit('ajaxResponse')
       }, 500)
       // 处理后台异常
-      if (response.code === 0) {
+      if (response._data._errCode === 0) {
         // 后台返回正常, 处理fields mapping
-        let result = __trans(request.fields, response.data)
+        let result = __trans(request.fields, response._data._retData)
         resolve(result)
         if (typeof response.coupon === 'number') {
         store.commit('updateCoupon', {coupon: response.coupon})
@@ -217,22 +216,17 @@ let __call = (path, options) => {
   }) // new Promise
 }
 
-const Api = new Vue({
-  data () {
-    return {
-      beforeMatchCallbcks: []
-    }
-  },
-  methods: {
-    beforeMatch (callback) {
-      this.beforeMatchCallbcks.push(callback)
-    },
-    call: __call
+export default {
+  install: function (Vue) {
+    const Api = new Vue({
+      data () {
+        return {
+        }
+      },
+      methods: {
+        call: __call
+      }
+    })
+    Vue.prototype.$api = Api
   }
-})
-
-const install = function ({ app, router, Vue }) {
-  Vue.prototype.$api = Api
 }
-
-export default install
