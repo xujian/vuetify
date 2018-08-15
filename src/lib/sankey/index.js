@@ -112,7 +112,17 @@ let sankey = function() {
     function computeNodeLinks() {
       let nodeMap = {}
       nodes.forEach(x => { nodeMap[x.name] = x});
-      // 继续查找link.next_nodes里面引用的node
+      // 继续查找link.next_nodes里面引用的node, 加入到nodes
+      links.forEach(l => {
+        if (!nodeMap.hasOwnProperty(l.target)) {
+          console.log('log-----missing nodes in target', l.target)
+          nodes.push(nodeMap[l.target] = {
+            id: nodeMap.length,
+            name: l.target,
+            level: 4
+          })
+        }
+      })
       nodes.forEach(node => {
         node.inLinks = [];
         node.outLinks = [];
