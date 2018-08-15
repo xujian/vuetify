@@ -112,6 +112,7 @@ let sankey = function() {
     function computeNodeLinks() {
       let nodeMap = {}
       nodes.forEach(x => { nodeMap[x.name] = x});
+      // 继续查找link.next_nodes里面引用的node
       nodes.forEach(node => {
         node.inLinks = [];
         node.outLinks = [];
@@ -121,8 +122,8 @@ let sankey = function() {
         l.target = nodeMap[l.target] || l.target
       });
       links.forEach(link => {
-        link.target.inLinks.push(link);
-        link.source.outLinks.push(link);
+        link.target.inLinks && link.target.inLinks.push(link);
+        link.target.inLinks && link.source.outLinks.push(link);
       });
     }
   

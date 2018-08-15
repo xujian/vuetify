@@ -67,27 +67,34 @@ let __trans = function (fields, row) {
 
 let __call = (path, options) => {
   console.info('%c$api.call==========path=' + path + '%c, options: ', 'background-color:#009688',
-    'background-color:#e57373;font-weight:500')
-  axios.defaults.baseURL = 'http://private-ad174-mikejianxu.apiary-mock.com'
+    'background-color:#e57373;font-weight:500', options)
+  axios.defaults.baseURL = 'http://lrolap.huishoubao.com'
   let vm = this
   options = options || {}
   options.data = options.data || {}
   let request = { // 最终发出的请求数据
     method: options.method || 'get',
     url: !path.startsWith('/api') ? '/api' + path : path,
-    data: {},
-    fields: []
+    data: {
+      _head: {
+        _interface: '',
+        _msgType: 'request',
+        _remark: '',
+        _timestamps: '',
+        _version: '1.0.0'
+      },
+      _param: {
+      }
+    }
   }
-    // 开始遍历mapping组
   let mapped = null, mappedParams = {}
-    mappings.forEach(function (catalog) {
-      // 开始遍历mapping api字典
-      catalog.apis.forEach(function (api) {
-        let {pattern, params} = __match(path, api.path)
-        if (pattern) { // 一直匹配到最后一个
+  mappings.forEach(catalog => {
+    catalog.apis.forEach((api) => {
+      let {pattern, params} = __match(path, api.path)
+      if (pattern) { // 一直匹配到最后一个
         mapped = JSON.parse(JSON.stringify(api))
         // 需要复制stringify丢失的format:function
-        api.data && api.data.forEach(function (d, index) {
+        api.params && api.params.forEach((d, index) => {
           if (d.format) {
             mapped.data[index].format = d.format
           }
@@ -96,80 +103,72 @@ let __call = (path, options) => {
       } // if pattern
     }) // apis.forEach
   }) // mappings.forEach
-  if (mapped !== null) {
-    mapped.method = mapped.method || 'get'
-  }
   if (options.data.order_by) {
     // 处理order_by字段, 换成后台真实字段
     if (mapped.fields) {
       let pivot = mapped.fields.find((f) => (f.pivot))
       if (pivot) {
-      let field = pivot.fields.find((f) => (f.name === options.data.order_by))
-      if (field && field.from) {
-        options.data.order_by = field.from
-      }
-      options.data.order = ({desc: 1, asc: 0})[options.data.order]
+        let field = pivot.fields.find((f) => (f.name === options.data.order_by))
+        if (field && field.from) {
+          options.data.order_by = field.from
+        }
+        options.data.order = ({desc: 1, asc: 0})[options.data.order]
       }
     }
   }
-  if (mappedParams.length) {
-    mappedParams.forEach((p) => {
-      mapped.to = mapped.to.replace('$' + p.name, p.value)
-      // 转换字典内原始参数
-      if (mapped.data) {
-      mapped.data.forEach((item, index) => {
+  mappedParams.forEach(p => {
+    mapped.to = mapped.to.replace('$' + p.name, p.value)
+    // 转换字典内原始参数
+    if (mapped.params) {
+      mapped.params.forEach((item, index) => {
         if (item.value === '$' + p.name) {
-        request.data[item.name] = p.value
-        mapped.data.splice(index, 1) // 删除已匹配的参数项
+          request.data._param[item.name] = p.value
+          mapped.params.splice(index, 1) // 删除已匹配的参数项
         }
       })
       // 处理未匹配到的项 应用default值
       // 例如处理page_no, page_size默认值
-      mapped.data.forEach((item, index) => {
+      mapped.params.forEach((item, index) => {
         if (item.value.startsWith('$') && item.default) {
-        request.data[item.name] = item.default
+        request.data._param[item.name] = item.default
         }
       })
-      }
-    })
-  }
-  if (mapped && mapped.data) {
+    }
+  })
+  if (mapped && mapped.params) {
     Object.keys(options.data).forEach((key, index) => {
-      if (options.data[key] instanceof Object) { // 支持第二层{}定义
-      Object.keys(options.data[key]).forEach((kk, ii) => {
-        mapped.data.forEach((d, i) => {
-        if (d.value === '$' + key + '.' + kk) {
-          let format = d.format || function (input) { return input }
-          request.data[d.name] = format(options.data[key][kk])
-          mapped.data.splice(i, 1)
-        }
-      })
-    })
-    // if (Object.keys(options.data[key].length === 0)) {
-    //   delete options.data[key]
-    // }
-    } else {
-    mapped.data.forEach((d, i) => {
-      if (d.value === '$' + key) {
-      let format = d.format || function (input) { return input }
-      request.data[d.name] = format(options.data[key])
-      delete options.data[key]
-      mapped.data.splice(i, 1)
-      }
-    })
+      if (options.data[key].constructor.name == 'Object') { // 支持第二层{}定义
+        Object.keys(options.data[key]).forEach((kk, ii) => {
+          mapped.params.forEach((d, i) => {
+            if (d.value === '$' + key + '.' + kk) {
+              let format = d.format || function (input) { return input }
+              request.data._param[d.name] = format(options.data[key][kk])
+              mapped.params.splice(i, 1)
+            }
+          })
+        })
+      } else {
+        mapped.params.forEach((d, i) => {
+          if (d.value === '$' + key) {
+            let format = d.format || function (input) { return input }
+            request.data._param[d.name] = format(options.data[key])
+            delete options.data[key]
+            mapped.params.splice(i, 1)
+          }
+        })
     }
   })
   // 复制api mappings内定义的写死参数
-  mapped.data.forEach((d, index) => {
+  mapped.params.forEach((d, index) => {
     if (typeof d.value === 'string' && d.value.startsWith('$')) {
     } else {
-    request.data[d.name] = d.value
+    request.data._param[d.name] = d.value
     }
   })
   }
   // 复制前台options.data内的其他参数
   Object.keys(options.data).forEach((key, index) => {
-    request.data[key] = options.data[key]
+    request.data._param[key] = options.data[key]
   })
   console.info('(requests.data 发送真实数据)', request.data)
   if (mapped !== null) {
@@ -187,7 +186,6 @@ let __call = (path, options) => {
   })
   return new Promise((resolve, reject) => {
     axios(request).then(res => {
-      console.info('response', res)
       let { data: response } = res
       setTimeout(function () {
         // vm.$bus.$emit('ajaxResponse')
@@ -201,7 +199,7 @@ let __call = (path, options) => {
         store.commit('updateCoupon', {coupon: response.coupon})
         }
       } else if (response.code === -2) { // 处理后台异常
-        vm.notice('系统繁忙')
+        // vm.notice('系统繁忙')
       } else if (response.code === 10) {
       } else if (response.code === 11) {
         // 登录态丢失
@@ -209,9 +207,7 @@ let __call = (path, options) => {
         // 服务器错误
       }
     }).catch((error) => {
-    setTimeout(function () {
-    }, 500)
-    reject(error)
+      reject(error)
     })
   }) // new Promise
 }
