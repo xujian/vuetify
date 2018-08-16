@@ -26,7 +26,7 @@
             :y="node.dy / 2"
             :x="node.level === 0 ? 30 : -10"
             dy="0.5em"
-            :text-anchor="node.level == 0 ? 'start' : 'end'">{{node.name.substr(-20)}}</text>
+            :text-anchor="node.level == 0 ? 'start' : 'end'">{{node.name ? node.name.substr(-20) : 'UNLK'}}</text>
         </g>
       </g>
     </g>
@@ -102,7 +102,7 @@ export default {
         l.d = this.engine.link()(l)
         l.strokeWidth = Math.max(1, l.dy)
         l.stroke = healthyColor(l.healthy)
-        l.title = `${l.source.name} → ${l.target.name}\n${formatValue(l.value)}\nhealthy: ${l.healthy}`
+        l.title = `${l.source.name} → ${l.target.name}\n${formatValue(l.calls)}\nhealthy: ${l.healthy}`
       })
       initialData.nodes.forEach(node => {
         node.translate = `translate(${node.x}, ${node.y})`

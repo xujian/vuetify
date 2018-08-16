@@ -2,26 +2,26 @@ import * as d3 from 'd3';
 
 let sankey = function() {
     var sankey = {},
-        width = 1600,
-        nodeWidth = 20,
-        nodePadding = 20,
-        minNodeHeight = 10,
-        curvature = 0.5,
-        size = [1, 1],
-        nodes = [],
-        links = [],
-        unknowSource = {
-          name: '[Unknow]',
-          x: 0, dx: 0, y: size[1] / 2, dy: 0,
-          level: 0, in: 0, out: 0,
-          inLinks: [], outLinks: []
-        },
-        unknowTarget = {
-          name: '[Unknow]',
-          x: 1600, dx: 0, y: size[1] / 2, dy: 0,
-          level: 4, in: 0, out: 0,
-          inLinks: [], outLinks: []
-        };
+      width = 1600,
+      nodeWidth = 20,
+      nodePadding = 20,
+      minNodeHeight = 10,
+      curvature = 0.5,
+      size = [1, 1],
+      nodes = [],
+      links = [],
+      unknowSource = {
+        name: '[Unknow]',
+        x: 0, dx: 0, y: size[1] / 2, dy: 0,
+        level: 0, in: 0, out: 0,
+        inLinks: [], outLinks: []
+      },
+      unknowTarget = {
+        name: '[Unknow]',
+        x: 1600, dx: 0, y: size[1] / 2, dy: 0,
+        level: 4, in: 0, out: 0,
+        inLinks: [], outLinks: []
+      };
   
     sankey.nodeWidth = function(_) {
       if (!arguments.length) return nodeWidth;
@@ -74,28 +74,26 @@ let sankey = function() {
      */
     sankey.link = function() {
       function link(d) {
-        if (!d.circuit) {
+        if (d.circuit !== 1) {
           var startX = d.source.x + d.source.dx,
-              startY = d.source.y + d.sy + d.dy / 2,
-              endX = d.target.x,
-              endY = d.target.y + d.ty + d.dy / 2,
-              xi = d3.interpolateNumber(startX, endX),
-              startControlX = xi(curvature),
-              startControlY = startY,
-              endControlX = xi(1 - curvature),
-              endControlY = endY;
+            startY = d.source.y + d.sy + d.dy / 2,
+            endX = d.target.x,
+            endY = d.target.y + d.ty + d.dy / 2,
+            midX = (startX + endX) / 2,
+            startControlX = midX,
+            startControlY = startY,
+            endControlX = midX,
+            endControlY = endY;
           return `M${startX},${startY}C${startControlX},${startControlY} ${endControlX},${endControlY} ${endX},${endY}`
         } else {
-          // 平级调用 画一个半圆
           var startX = d.source.x + d.source.dx,
-              startY = d.source.y + d.sy + d.dy / 2,
-              endX = d.target.x,
-              endY = d.target.y + d.ty + d.dy / 2,
-              xi = d3.interpolateNumber(startX, endX),
-              startControlX = startX + Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2) // 始终左进右出
-              startControlY = startY,
-              endControlX = startX - Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2)
-              endControlY = endY + (Math.min(d.target.x - d.source.x, 150))
+            startY = d.source.y + d.sy + d.dy / 2,
+            endX = d.target.x,
+            endY = d.target.y + d.ty + d.dy / 2,
+            startControlX = startX + Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2) // 始终左进右出
+            startControlY = startY,
+            endControlX = startX - Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2)
+            endControlY = endY + (Math.min(d.target.x - d.source.x, 150))
           return `M${startX},${startY}C${startControlX},${startControlY} ${endControlX},${endControlY} ${endX},${endY}`
         }
       }
@@ -111,9 +109,11 @@ let sankey = function() {
     // Also, if the source and target are not objects, assume they are indices.
     function computeNodeLinks() {
       let nodeMap = {}
-      nodes.forEach(x => { nodeMap[x.name] = x});
+      let maxLinkCalls = Math.max(...links.map(l => l.calls))
+      nodes.forEach(x => { nodeMap[x.name] = x})
       // 继续查找link.next_nodes里面引用的node, 加入到nodes
       links.forEach(l => {
+        l.value = Math.max(maxLinkCalls / 100, l.calls)
         if (!nodeMap.hasOwnProperty(l.target)) {
           console.log('log-----missing nodes in target', l.target)
           nodes.push(nodeMap[l.target] = {
@@ -150,76 +150,30 @@ let sankey = function() {
     // Nodes are assigned the maximum breadth of incoming neighbors plus one;
     // nodes with no incoming links are assigned breadth zero, while
     // nodes with no outgoing links are assigned the maximum breadth.
-    // 似乎是判定node横轴位置
+    // 判定node横轴位置
     function computeNodeBreadths() {
-      nodes.forEach((item) => {
-        item.dx = nodeWidth
-      })
-      /**
-       * 寻找并定义
-       * 最左侧 只出不进  level = 0
-       * 最左侧 只出不进  level = 4
-       * */
-      nodes.forEach(n => {
-        if (n.inLinks.length === 0) { // 只出不进的节点归最左侧
-          n.level = 0
-        }
-       })
-       nodes.filter(n => n.level !== 0).forEach(n => { // 接着处理其他节点
-         if (n.outLinks.length === 0) { // 只进不出的节点 终点
-          if (n.inLinks.every(l => l.source.level === 0)) { // 只有第一级流量的节点
-            n.level = 1
-          } else {
-            n.level = 4
-          }
-        } else { // 剩下的中间节点 (有进有出) 先归到 level 1
-          n.level = 2
-        }
-      })
-      let levels = {}
-      // splitLevel(1);
-      splitLevel(2);
+      let levels = {};
+      [0,1,2,3,4].forEach(x => {
+        levels[x] = nodes.filter(n => n.level === x)
+      });
+      // splitLevel(2);
       [2, 3].forEach(x => { checkInnerLevelCalls(x)})
       nodes.forEach(node => {
         node.x = node.level * (width / 4)
         node.dx = nodeWidth
       });
 
-      // 拆分第二层
-      // 查找level=2平级之间互相调用
-      function splitLevel (x) {
-        levels[x] = nodes.filter(n => n.level === x)
-        // 计算每一 node 所属 link value 总和的中位数
-        let sourceValues = levels[x].map(n => {
-            return n.inLinks.length === 0 ? 0 : n.inLinks.map(l => l.value).reduce((a, b) => a + b)
-          }
-        )
-        sourceValues = sourceValues.sort((a, b) => a < b)
-        let middleValue = sourceValues[Math.floor(sourceValues.length / 2)]
-        levels[x].forEach(n => { // 降级 level 2 -> 3
-          if (n.inLinks.some(
-            s => s.source.level === x
-            // && s.value > middleValue
-             // && n.settled !== true
-          ) && !n.outLinks.some(t => t.target.level <= x)
-            ) {
-            n.level = x + 1
-          }
-        })
-        levels[x + 1] = nodes.filter(n => n.level === x + 1)
-      }
-
       // check same level calls
       // 检查同级调用
       function checkInnerLevelCalls (x) {
         levels[x].forEach(n => {
           n.inLinks.forEach(l => {
-            if (l.source.level === x) {
+            if (l.source.level >= x) {
               l.circuit = 1
             }
           })
           n.outLinks.forEach(l => {
-            if (l.target.level === x) {
+            if (l.target.level <= x) {
               l.circuit = 1
             }
           })
@@ -243,14 +197,13 @@ let sankey = function() {
         resolveCollisions();
       }
       function initializeNodeDepth() {
-        // 计算每一列所占高度
         var ky = d3.min(nodesByBreadth, 
           nodes => (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, n => n.value)
         )
         nodesByBreadth.forEach(nodes => {
           nodes.forEach((node, i) => {
-            node.y = i;
-            node.dy = Math.max(node.value * ky, minNodeHeight);
+            node.y = i
+            node.dy = node.value * ky
           });
         });
         links.forEach(link => {

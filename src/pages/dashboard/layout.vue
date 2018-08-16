@@ -22,7 +22,7 @@
       </v-tabs>
     </v-toolbar>
 
-    <v-container>
+    <v-container class="page-content">
       <v-layout row>
         <v-flex xs12>
           <v-slide-y-transition mode="out-in">
@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style>
-.container {
-  max-width: 1200px
+.container.page-content {
+  max-width: 1280px 
 }
 </style>

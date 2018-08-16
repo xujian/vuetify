@@ -91,13 +91,12 @@ export default {
           nodes.push({
             id: n.id,
             name: n.node_name,
-            level: n.node_level
+            level: n.node_level - 1
           })
           n.next_nodes.forEach((t, i) => {
             links.push({
               source: n.node_name,
               target: t.node_name,
-              value: Math.max(100000, t.call_count),
               calls: t.call_count,
               time: t.average_time,
               healthy: t.success_rate
@@ -108,10 +107,19 @@ export default {
           nodes: nodes,
           links: links
         }
+        this.excludeNonStandard()
         if(this.appOptions.length === 0) {
-          this.appOptions = nodes.filter(n => n.level === 1)
+          this.appOptions = nodes.filter(n => n.level === 0)
         }
       })
+    },
+    excludeNonStandard() {
+      let nodeLevels = {}
+      this.sankeyData.nodes.forEach(n => {
+        nodeLevels[n.name] = n.level
+      })
+      this.sankeyData.nodes = this.sankeyData.nodes.filter(n => nodeLevels[n.name] != -2)
+      this.sankeyData.links = this.sankeyData.links.filter(l => nodeLevels[l.source] !== -2 && nodeLevels[l.target] !== -2)
     }
   },
   components: {
