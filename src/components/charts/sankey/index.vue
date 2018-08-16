@@ -35,7 +35,7 @@
 
 <script>
 import * as d3 from 'd3';
-import engine from '@/lib/sankey';
+import engine from './engine';
 import HsbSvg from '@/components/svg'
 
 export default {

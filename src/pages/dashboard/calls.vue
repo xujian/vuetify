@@ -2,15 +2,15 @@
   <div class="sankey-page page">
     <h1>应用调用关系图</h1>
       <v-layout row wrap>
-      <v-flex xs12 sm6>
-        <v-select
-            :items="timeOptions"
-            :value="4"
-            @change="timeSelectChange"
-            label="时间段"
-          ></v-select>
-      </v-flex>
-      <v-flex xs12 sm6>
+        <v-flex xs12 sm6>
+          <v-select
+              :items="timeOptions"
+              :value="4"
+              @change="timeSelectChange"
+              label="时间段"
+            ></v-select>
+        </v-flex>
+        <v-flex xs12 sm6>
           <v-select
             multiple
             :items="appOptions"
@@ -29,7 +29,6 @@
 
 <script>
 import SankeyChart from '@/components/charts/sankey/index'
-import axios from 'axios'
 
 export default {
   data() {
