@@ -1,13 +1,23 @@
 <template>
-  <hsb-svg :width="width" :height="height">
+  <hsb-svg :width="width" :height="height + 80">
+    <defs>
+      <marker id="sankey-marker-arrow" viewBox="0 0 40 40" refX="10" refY="5"
+          markerWidth="40" markerHeight="40" markerUnits="userSpaceOnUse"
+          orient="auto">
+        <path d="M 0 0 L 10 5 L 0 10" />
+      </marker>
+    </defs>
     <g ref="root" :class="{'dim':dim}" v-if="formatedData">
-      <g class="links" ref="links">
+      <g class="ruler">
+        <rect class="ruler-rect" width="1600" height="80"></rect>
+      </g>
+      <g class="links" ref="links" tranform="translate(0, 80)">
         <g class="link" v-for="(link, i) in formatedData.links"
           :key="i">
           <path class="link-path"
             :class="{'hovered': link.hovered}"
             :d="link.d" 
-            :stroke="link.stroke"
+            :stroke="link.stroke" marker-start="url(#sankey-marker-arrow)"
             :stroke-width="link.strokeWidth">
               <title>{{link.title}}</title>
             </path>
@@ -38,6 +48,9 @@ import * as d3 from 'd3';
 import engine from './engine';
 import HsbSvg from '@/components/svg'
 
+/** 
+ * 输入固定格式参数 绘制SANKEY 桑基图
+ */
 export default {
   name: 'sankey-chart',
   props: {
@@ -55,7 +68,7 @@ export default {
     },
     levels: {
       type: Number,
-      default: 4
+      default: 5
     },
     value: {
       type: Object,
@@ -152,5 +165,10 @@ export default {
   .link-path:not(.hovered) {
     stroke-opacity: .1;
   }
+}
+.ruler-rect {
+  fill #ddd
+  stroke #cccccc
+  stroke-width 1px
 }
 </style>

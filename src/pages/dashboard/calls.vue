@@ -2,7 +2,7 @@
   <div class="sankey-page page">
     <h1>应用调用关系图</h1>
       <v-layout row wrap>
-        <v-flex xs12 sm6>
+        <v-flex xs12 sm3>
           <v-select
               :items="timeOptions"
               :value="4"
@@ -10,7 +10,7 @@
               label="时间段"
             ></v-select>
         </v-flex>
-        <v-flex xs12 sm6>
+        <v-flex xs12 sm3>
           <v-select
             multiple
             :items="appOptions"
@@ -30,6 +30,10 @@
 <script>
 import SankeyChart from '@/components/charts/sankey/index'
 
+/**
+ * 调用接口获取数据并格式化
+ * 将数据输出到sankey-chart
+ */
 export default {
   data() {
     return {
