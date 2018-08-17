@@ -38,7 +38,7 @@
             :y="node.dy / 2"
             :x="node.level === 0 ? 30 : -10"
             dy="0.5em"
-            :text-anchor="node.level == 0 ? 'start' : 'end'">{{node.name ? node.name.substr(-20) : 'UNLK'}}</text>
+            :text-anchor="node.level == 0 ? 'start' : 'end'">{{node.name.substr(-25) + node.order}}</text>
             <title>{{node.title}}</title>
         </g>
       </g>

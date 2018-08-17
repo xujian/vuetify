@@ -4,12 +4,13 @@ let sankey = function() {
     var sankey = {},
       width = 1600,
       nodeWidth = 20,
-      nodePadding = 20,
+      nodePadding = 25,
       minNodeHeight = 10,
       curvature = 0.5,
       size = [1, 1],
       nodes = [],
       links = [],
+      maxNodeValue = 1,
       unknowSource = {
         name: '[Unknow]',
         x: 0, dx: 0, y: size[1] / 2, dy: 0,
@@ -39,6 +40,8 @@ let sankey = function() {
       if (!arguments.length) return nodes;
       nodes = _;
       nodes.forEach((n, i) => {n.id = i})
+      let callValues = nodes.map(n => n.calls)
+      maxNodeValue = Math.max(...callValues)
       return sankey;
     };
   
@@ -190,19 +193,27 @@ let sankey = function() {
         .map(d => d.values);
       initializeNodeDepth();
       resolveCollisions();
-      for (var alpha = 1; iterations > 0; --iterations) {
+      /*for (var alpha = 1; iterations > 0; --iterations) {
         relaxRightToLeft(alpha *= .99);
         resolveCollisions();
         relaxLeftToRight(alpha);
         resolveCollisions();
-      }
+      }*/
       function initializeNodeDepth() {
-        var ky = d3.min(nodesByBreadth, 
-          nodes => (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, n => n.value)
+      let maxLinkCalls = Math.max(...links.map(l => l.calls))
+      var ky = d3.min(nodesByBreadth, 
+          nodes => 
+            (size[1] - (nodes.length - 1) * nodePadding) /
+            d3.sum(nodes, n => n.value)
         )
+        if (maxLinkCalls * ky > 400) { //  avoid huge links避免返回节点较少时出现特大link
+          ky = 400 / maxLinkCalls
+        }
         nodesByBreadth.forEach(nodes => {
+          nodes = nodes.sort((a, b) => a.order - b.order)
+          console.info(nodes.map(n => n.order))
           nodes.forEach((node, i) => {
-            if (node.name === 'HjxOrderConsumerSys') console.info(node)
+            console.info('nodesByBreadth', node.level, node.order)
             node.y = i
             node.dy = node.value * ky
           });
