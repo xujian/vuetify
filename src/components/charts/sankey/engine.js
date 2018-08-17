@@ -4,7 +4,7 @@ let sankey = function() {
   var sankey = {},
     width = 1600,
     nodeWidth = 20,
-    nodePadding = 25,
+    nodePadding = 20,
     minNodeHeight = 10,
     curvature = 0.5,
     size = [1, 1],
@@ -200,11 +200,12 @@ let sankey = function() {
       resolveCollisions();
     }*/
     function initializeNodeDepth() {
-    let maxLinkCalls = Math.max(...links.map(l => l.calls))
-    var ky = d3.min(nodesByBreadth, 
+      let maxLinkCalls = Math.max(...links.map(l => l.calls))
+      let minValueLImit = maxLinkCalls / 25 // 限制节点最小值
+      var ky = d3.min(nodesByBreadth, 
         nodes => 
           (size[1] - (nodes.length - 1) * nodePadding) /
-          d3.sum(nodes, n => n.value)
+          d3.sum(nodes, n => Math.max(n.value, minValueLImit))
       )
       if (maxLinkCalls * ky > 400) { //  avoid huge links避免返回节点较少时出现特大link
         ky = 400 / maxLinkCalls
@@ -213,7 +214,7 @@ let sankey = function() {
         nodes = nodes.sort((a, b) => a.order - b.order)
         nodes.forEach((node, i) => {
           node.y = i
-          node.dy = node.value * ky
+          node.dy = Math.max(node.value, minValueLImit) * ky
         });
       });
       links.forEach(link => {
