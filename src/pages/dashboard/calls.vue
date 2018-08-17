@@ -19,8 +19,13 @@
             :value="appsSelected"
             @change="appSelectChange"
             label="按应用筛选"
-          >
-        </v-select>
+          ></v-select>
+        </v-flex>
+        <v-flex xs12 sm3>
+          <v-checkbox
+            v-model="includesNonStandard"
+            label="包含非规范节点"
+            @change="query()" />
       </v-flex>
     </v-layout>
     <sankey-chart :value="sankeyData"></sankey-chart>
@@ -44,6 +49,7 @@ export default {
       appOptions: [],
       appsSelected: [],
       timeSelected: 4,
+      includesNonStandard: false,
       timeOptions: [
         {
             value: 1,
@@ -90,11 +96,13 @@ export default {
       }
       this.$api.call('/calls', {data: params}).then(response => {
         let list = response.list, links = [], nodes = []
+        list = list.sort((a, b) => a.node_pos < b.node_pos)
         list.forEach((n) => {
           nodes.push({
             id: n.id,
             name: n.node_name,
-            level: n.node_level - 1
+            level: n.node_level - 1,
+            order: n.node_pos
           })
           n.next_nodes.forEach((t, i) => {
             links.push({
@@ -110,7 +118,7 @@ export default {
           nodes: nodes,
           links: links
         }
-        this.excludeNonStandard()
+        if (!this.includesNonStandard) this.excludeNonStandard()
         if(this.appOptions.length === 0) {
           this.appOptions = nodes.filter(n => n.level === 0)
         }
