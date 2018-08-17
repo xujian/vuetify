@@ -1,17 +1,25 @@
 <template>
   <hsb-svg :width="width" :height="height + 80">
     <defs>
-      <marker id="sankey-marker-arrow" viewBox="0 0 40 40" refX="10" refY="5"
-          markerWidth="40" markerHeight="40" markerUnits="userSpaceOnUse"
+      <marker id="sankey-marker-arrow" viewBox="0 0 10 10" refX="0" refY="5"
+          markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse"
           orient="auto">
-        <path d="M 0 0 L 10 5 L 0 10" />
+        <path d="M10,5 L0,2.5" />
+        <path d="M10,5 L0,5" />
+        <path d="M10,5 L0,2.5" />
       </marker>
     </defs>
-    <g ref="root" :class="{'dim':dim}" v-if="formatedData">
-      <g class="ruler">
-        <rect class="ruler-rect" width="1600" height="80"></rect>
+    <g class="ruler" transform="translate(0, 1220)">
+      <g class="ruler-g" v-for="x in [0,1,2,3,4]" :key="x" :transform="'translate(' + x * 400 + ', 0)'">
+        <rect class="ruler-tick-rect" :class="'level-' + x" :width="x < 4 ? 400 : 0" height="60"></rect>
+        <text :text-anchor="x < 4 ? 'start' : 'end'" :x = "x < 4 ? 5 : -5" y = "15">LEVEL {{x + 1}}</text>
       </g>
-      <g class="links" ref="links" tranform="translate(0, 80)">
+      </g>
+    <g class="background">
+      <path class="dashed" v-for="x in [0,1,2,3,4]" :key="x" stroke-dasharray="4,1" :d="'M' + (x*400) + ' 0 l0,1280'" />
+    </g>
+    <g ref="root" :class="{'dim':dim}" v-if="formatedData">
+      <g class="links" ref="links">
         <g class="link" v-for="(link, i) in formatedData.links"
           :key="i">
           <path class="link-path"
@@ -29,14 +37,15 @@
           :transform="node.translate"
           @mouseover="onNodeMouseOver(node)"
           @mouseout="onNodeMouseOut(node)">
-          <rect class="node-rect" :width="nodeWidth" :height="node.dy">
-            <title>{{node.title}}</title>
-          </rect>
+          <rect class="node-rect" :width="nodeWidth" :height="node.dy"></rect>
+          <line class="in" x1="5" :y2="(node.dy * node.in) / Math.max(node.in, node.out, 1)" x2="5" y1="0"></line>
+          <line class="out" x1="15" :y2="(node.dy * node.out) / Math.max(node.in, node.out, 1)" x2="15" y1="0"></line>
           <text class="node-text"
             :y="node.dy / 2"
             :x="node.level === 0 ? 30 : -10"
             dy="0.5em"
             :text-anchor="node.level == 0 ? 'start' : 'end'">{{node.name ? node.name.substr(-20) : 'UNLK'}}</text>
+            <title>{{node.title}}</title>
         </g>
       </g>
     </g>
@@ -142,10 +151,9 @@ export default {
 
 <style lang='stylus'>
 .node rect {
-  cursor: move;
-  fill: #006338;
+  fill: #ddd;
   fill-opacity: .75;
-  stroke: #000;
+  stroke: #009688;
   shape-rendering: crispEdges;
   &:hover {
     fill-opacity: 1;
@@ -153,6 +161,14 @@ export default {
 }
 .node text {
   font-size: 18px;
+}
+.node line.in {
+  stroke: #00796B;
+  stroke-width: 10px;
+}
+.node line.out {
+  stroke: #00695C;
+  stroke-width: 10px;
 }
 .link-path {
   fill: none;
@@ -167,8 +183,30 @@ export default {
   }
 }
 .ruler-rect {
-  fill #ddd
-  stroke #cccccc
-  stroke-width 1px
+  fill: #ddd;
+  stroke: #cccccc;
+  stroke-width: 1px;
+}
+.ruler-tick-rect {
+  fill: #ddd;
+  stroke: #cccccc;
+  stroke-width: 1px;
+  &.level-1 {
+    fill: #ddd;
+  }
+  &.level-2 {
+    fill: #d8d8d8;
+  }
+  &.level-3 {
+    fill: #ccc;
+  }
+  &.level-4 {
+    fill: #c8c8c8;
+  }
+}
+.background {
+  .dashed {
+    stroke : #999
+  }
 }
 </style>

@@ -142,7 +142,7 @@ let sankey = function() {
       nodes.forEach(function(node) {
         node.in  = d3.sum(node.inLinks, l => l.value) // 入流量
         node.out = d3.sum(node.outLinks, l => l.value) // 出流量
-        node.value = Math.max(node.in, node.out)
+        node.value = Math.max(node.in, node.out, 1)
       });
     }
   
@@ -202,6 +202,7 @@ let sankey = function() {
         )
         nodesByBreadth.forEach(nodes => {
           nodes.forEach((node, i) => {
+            if (node.name === 'HjxOrderConsumerSys') console.info(node)
             node.y = i
             node.dy = node.value * ky
           });
