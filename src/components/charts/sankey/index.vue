@@ -1,20 +1,14 @@
 <template>
   <hsb-svg :width="width" :height="height + 80">
     <defs>
-      <marker id="sankey-marker-arrow" viewBox="0 0 10 10" refX="0" refY="5"
-          markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse"
-          orient="auto">
-        <path d="M10,5 L0,2.5" />
-        <path d="M10,5 L0,5" />
-        <path d="M10,5 L0,2.5" />
-      </marker>
+      <hsb-svg-marker-arrow id="marker-arrow"></hsb-svg-marker-arrow>
     </defs>
     <g class="ruler" transform="translate(0, 1220)">
       <g class="ruler-g" v-for="x in [0,1,2,3,4]" :key="x" :transform="'translate(' + x * 400 + ', 0)'">
         <rect class="ruler-tick-rect" :class="'level-' + x" :width="x < 4 ? 400 : 0" height="60"></rect>
         <text :text-anchor="x < 4 ? 'start' : 'end'" :x = "x < 4 ? 5 : -5" y = "15">LEVEL {{x + 1}}</text>
       </g>
-      </g>
+    </g>
     <g class="background">
       <path class="dashed" v-for="x in [0,1,2,3,4]" :key="x" stroke-dasharray="4,1" :d="'M' + (x*400) + ' 0 l0,1280'" />
     </g>
@@ -25,7 +19,7 @@
           <path class="link-path"
             :class="{'hovered': link.hovered}"
             :d="link.d" 
-            :stroke="link.stroke" marker-start="url(#sankey-marker-arrow)"
+            :stroke="link.stroke" marker-start="url(#marker-arrow)"
             :stroke-width="link.strokeWidth">
               <title>{{link.title}}</title>
             </path>
@@ -56,6 +50,7 @@
 import * as d3 from 'd3';
 import engine from './engine';
 import HsbSvg from '@/components/svg'
+import HsbSvgMarkerArrow from '@/components/svg/marker-arrow'
 
 /** 
  * 输入固定格式参数 绘制SANKEY 桑基图
@@ -144,7 +139,8 @@ export default {
     }
   },
   components: {
-    HsbSvg
+    HsbSvg,
+    HsbSvgMarkerArrow
   }
 };
 </script>
