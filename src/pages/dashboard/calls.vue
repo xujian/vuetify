@@ -96,7 +96,6 @@ export default {
       }
       this.$api.call('/calls', {data: params}).then(response => {
         let list = response.list, links = [], nodes = []
-        list = list.sort((a, b) => a.node_pos < b.node_pos)
         list.forEach((n) => {
           nodes.push({
             id: n.id,
