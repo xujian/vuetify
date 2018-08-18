@@ -197,17 +197,23 @@ let sankey = function() {
         if (n.inLinks.length === 0) { // 只出不进的节点归最左侧	
           n.level = 0	
         }	
-       })	
-       list.filter(n => n.level !== 0).forEach(n => { // 接着处理其他节点	
-         if (n.outLinks.length === 0) { // 只进不出的节点 终点	
-          if (n.inLinks.every(l => l.source.level === 0)) { // 只有第一级流量的节点	
-            n.level = 1	
-          } else {	
-            n.level = 4	
-          }	
-        } else { // 剩下的中间节点 (有进有出) 先归到 level 1	
-          n.level = 2	
+       })
+       list.forEach(n => {	
+        if (n.outLinks.length === 0) { // 只出不进的节点归最左侧	
+          n.level = 4
         }	
+       })
+       list.filter(n => n.level !== 0 && n.level !== 4).forEach(n => { // 接着处理其他节点
+          if (n.inLinks.every(l => l.source.level === 0)) { // 只有第一级流量的节点	
+            n.level = 1
+          } else {	
+            n.level = 2
+          }
+      })
+      list.filter(n => n.level < 4).forEach(n => {	
+       if (n.outLinks.every(l => l.target.level === 4)) { // 只出不进的节点归最左侧	
+         n.level = 3
+       }	
       })
     }
   }
