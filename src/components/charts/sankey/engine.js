@@ -156,6 +156,8 @@ let sankey = function() {
   // 判定node横轴位置
   function computeNodeBreadths() {
     let levels = {};
+    let unknownLevels = nodes.filter(n => n.level === -2) // 未明确定义 level 的节点需要按调用重排
+    relevel(unknownLevels);
     [0,1,2,3,4].forEach(x => {
       levels[x] = nodes.filter(n => n.level === x)
     });
@@ -180,6 +182,32 @@ let sankey = function() {
             l.circuit = 1
           }
         })
+      })
+    }
+    /**
+     * 重排 X轴
+     * @param {*} list 
+     */
+    function relevel (list) {
+      /**	
+       * 最左侧 只出不进  level = 0	
+       * 最左侧 只出不进  level = 4	
+       * */	
+      list.forEach(n => {	
+        if (n.inLinks.length === 0) { // 只出不进的节点归最左侧	
+          n.level = 0	
+        }	
+       })	
+       list.filter(n => n.level !== 0).forEach(n => { // 接着处理其他节点	
+         if (n.outLinks.length === 0) { // 只进不出的节点 终点	
+          if (n.inLinks.every(l => l.source.level === 0)) { // 只有第一级流量的节点	
+            n.level = 1	
+          } else {	
+            n.level = 4	
+          }	
+        } else { // 剩下的中间节点 (有进有出) 先归到 level 1	
+          n.level = 2	
+        }	
       })
     }
   }
