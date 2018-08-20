@@ -1,5 +1,8 @@
 import Vue from 'vue'
 
+/***
+ * 向右画线
+ */
 let __drawHorizonal = (from, to) => {
     var startX = from.x,
     startY = from.y,
@@ -13,6 +16,9 @@ let __drawHorizonal = (from, to) => {
     return `M${startX},${startY}C${startControlX},${startControlY} ${endControlX},${endControlY} ${endX},${endY}`
 },
 
+/**
+ * 垂直画线
+ */
 __drawVertical = (from, to) => {
     var startX = from.x,
         startY = from.y,
@@ -51,7 +57,7 @@ let component = Vue.component('svg-bezier', {
     },
     computed: {
         d() {
-            if (this.from.x != this.to.x) {
+            if (this.to.x > this.from.x) {
                 return __drawHorizonal(this.from, this.to)
             } else {
                 return __drawVertical(this.from, this.to)
