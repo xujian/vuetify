@@ -14,15 +14,14 @@
     </g>
     <g ref="root" :class="{'dim':dim}" v-if="formatedData">
       <g class="links" ref="links">
-        <g class="link" v-for="(link, i) in formatedData.links"
-          :key="i">
-          <path class="link-path"
-            :class="{'hovered': link.hovered}"
-            :d="link.d" 
-            :stroke="link.stroke" marker-start="url(#marker-arrow)"
-            :stroke-width="link.strokeWidth">
-              <title>{{link.title}}</title>
-            </path>
+        <g class="link" v-for="(link, i) in formatedData.links" :key="i">
+            <hsb-bezier 
+              :from="{x: link.source.x, y: link.source.y + link.sy + link.dy / 2}"
+              :to="{x: link.target.x, y: link.target.y + link.ty + link.dy / 2}"
+              class="link-path"
+              :class="{'hovered': link.hovered}"
+              :stroke="link.stroke"
+              :stroke-width="link.strokeWidth" />
         </g>
       </g>
       <g class="nodes" ref="nodes">
@@ -50,6 +49,7 @@
 import * as d3 from 'd3';
 import engine from './engine';
 import HsbSvg from '@/components/svg'
+import HsbBezier from '@/components/svg/bezier'
 import HsbSvgMarkerArrow from '@/components/svg/marker-arrow'
 
 /** 
@@ -126,7 +126,6 @@ export default {
         .links(initialData.links)
         .layout(32);
       initialData.links.forEach(l => {
-        l.d = this.engine.link()(l)
         l.strokeWidth = Math.max(1, l.dy)
         l.stroke = healthyColor(l.healthy)
         l.title = `${l.source.name} → ${l.target.name}\n${formatValue(l.calls)}\nhealthy: ${l.healthy}`
@@ -150,7 +149,8 @@ export default {
   },
   components: {
     HsbSvg,
-    HsbSvgMarkerArrow
+    HsbSvgMarkerArrow,
+    HsbBezier
   }
 };
 </script>

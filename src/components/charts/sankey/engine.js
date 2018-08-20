@@ -79,42 +79,6 @@ let sankey = function() {
     return sankey;
   };
 
-  /**
-   * 绘制 link path
-   */
-  sankey.link = function() {
-    function link(d) {
-      if (d.circuit !== 1) {
-        var startX = d.source.x + d.source.dx,
-          startY = d.source.y + d.sy + d.dy / 2,
-          endX = d.target.x,
-          endY = d.target.y + d.ty + d.dy / 2,
-          midX = (startX + endX) / 2,
-          startControlX = midX,
-          startControlY = startY,
-          endControlX = midX,
-          endControlY = endY;
-        return `M${startX},${startY}C${startControlX},${startControlY} ${endControlX},${endControlY} ${endX},${endY}`
-      } else {
-        var startX = d.source.x + d.source.dx,
-          startY = d.source.y + d.sy + d.dy / 2,
-          endX = d.target.x,
-          endY = d.target.y + d.ty + d.dy / 2,
-          startControlX = startX + Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2) // 始终左进右出
-          startControlY = startY,
-          endControlX = startX - Math.abs(d.target.y - d.source.y + d.sy + d.dy / 2)
-          endControlY = endY + (Math.min(d.target.x - d.source.x, 150))
-        return `M${startX},${startY}C${startControlX},${startControlY} ${endControlX},${endControlY} ${endX},${endY}`
-      }
-    }
-    link.curvature = function(_) {
-      if (!arguments.length) return curvature;
-      curvature = +_;
-      return link;
-    };
-    return link;
-  };
-
   // Populate the inLinks and outLinks for each node.
   // Also, if the source and target are not objects, assume they are indices.
   function computeNodeLinks() {
