@@ -4,13 +4,13 @@
       <hsb-svg-marker-arrow id="marker-arrow"></hsb-svg-marker-arrow>
     </defs>
     <g class="ruler" transform="translate(0, 1220)">
-      <g class="ruler-g" v-for="x in [0,1,2,3,4]" :key="x" :transform="'translate(' + x * 400 + ', 0)'">
-        <rect class="ruler-tick-rect" :class="'level-' + x" :width="x < 4 ? 400 : 0" height="60"></rect>
-        <text :text-anchor="x < 4 ? 'start' : 'end'" :x = "x < 4 ? 5 : -5" y = "15">LEVEL {{x + 1}}</text>
+      <g class="ruler-g" v-for="x in levelIndexes" :key="x" :transform="'translate(' + x * levelSize + ', 0)'">
+        <rect class="ruler-tick-rect" :class="'level-' + x" :width="x < levels - 1 ?  levelSize : 0" height="60"></rect>
+        <text :text-anchor="x < levels - 1 ? 'start' : 'end'" :x = "x < levels - 1 ? 5 : -5" y = "15">LEVEL {{x + 1}}</text>
       </g>
     </g>
     <g class="background">
-      <path class="dashed" v-for="x in [0,1,2,3,4]" :key="x" stroke-dasharray="4,1" :d="'M' + (x*400) + ' 0 l0,1280'" />
+      <path class="dashed" v-for="x in levelIndexes" :key="x" stroke-dasharray="4,1" :d="'M' + x * levelSize + ' 0 l0,1280'" />
     </g>
     <g ref="root" :class="{'dim':dim}" v-if="formatedData">
       <g class="links" ref="links">
@@ -70,6 +70,9 @@ export default {
       type: Number,
       default: 20
     },
+    /**
+    *  总层数 
+    **/
     levels: {
       type: Number,
       default: 5
@@ -88,9 +91,16 @@ export default {
     },
     engine() {
       return engine()
+        .levels(this.levels)
         .nodeWidth(20)
         .nodePadding(10)
         .size([this.width, this.height]);
+    },
+    levelSize() {
+      return this.width / (this.levels -1)
+    },
+    levelIndexes() {
+      return [...Array(this.levels).keys()]
     }
   },
   data() {

@@ -11,7 +11,7 @@
             ></v-select>
         </v-flex>
     </v-layout>
-    <sankey-chart :value="sankeyData"></sankey-chart>
+    <sankey-chart :value="sankeyData" :levels="7"></sankey-chart>
   </div>
 </template>
 

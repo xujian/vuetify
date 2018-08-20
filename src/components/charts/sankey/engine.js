@@ -8,6 +8,7 @@ let sankey = function() {
     minNodeHeight = 10,
     curvature = 0.5,
     size = [1, 1],
+    levels = 4,
     nodes = [],
     links = [],
     maxNodeValue = 1,
@@ -23,6 +24,12 @@ let sankey = function() {
       level: 4, in: 0, out: 0,
       inLinks: [], outLinks: []
     };
+
+  sankey.levels = function(_) {
+    if (!arguments.length) return levels;
+    levels = _;
+    return sankey;
+  };
 
   sankey.nodeWidth = function(_) {
     if (!arguments.length) return nodeWidth;
@@ -155,23 +162,23 @@ let sankey = function() {
   // nodes with no outgoing links are assigned the maximum breadth.
   // 判定node横轴位置
   function computeNodeBreadths() {
-    let levels = {};
+    let nodesByLevel = {};
     let unknownLevels = nodes.filter(n => n.level === -2) // 未明确定义 level 的节点需要按调用重排
-    relevel(unknownLevels);
-    [0,1,2,3,4].forEach(x => {
-      levels[x] = nodes.filter(n => n.level === x)
+    //relevel(unknownLevels);
+    ;[...Array(levels).keys()].forEach(x => {
+      nodesByLevel[x] = nodes.filter(n => n.level === x)
     });
     // splitLevel(2);
     [2, 3].forEach(x => { checkInnerLevelCalls(x)})
     nodes.forEach(node => {
-      node.x = node.level * (width / 4)
+      node.x = node.level * (width / (levels - 1))
       node.dx = nodeWidth
     });
 
     // check same level calls
     // 检查同级调用
     function checkInnerLevelCalls (x) {
-      levels[x].forEach(n => {
+      nodesByLevel[x].forEach(n => {
         n.inLinks.forEach(l => {
           if (l.source.level >= x) {
             l.circuit = 1
@@ -241,8 +248,9 @@ let sankey = function() {
           (size[1] - (nodes.length - 1) * nodePadding) /
           d3.sum(nodes, n => Math.max(n.value, minValueLImit))
       )
-      if (maxLinkCalls * ky > 400) { //  avoid huge links避免返回节点较少时出现特大link
-        ky = 400 / maxLinkCalls
+      let maxPathVaue = width / (levels - 1)
+      if (maxLinkCalls * ky > maxPathVaue) { //  avoid huge links避免返回节点较少时出现特大link
+        ky = maxPathVaue / maxLinkCalls
       }
       nodesByBreadth.forEach(nodes => {
         nodes = nodes.sort((a, b) => a.order - b.order)
