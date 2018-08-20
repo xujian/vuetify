@@ -10,7 +10,13 @@ import api from './services/api'
 
 import 'vuetify/dist/vuetify.min.css'
 
-Vue.use(Vuetify)
+Vue.use(Vuetify, {
+    theme: {
+        primary: '#009688',
+        secondary: '#29B6F6',
+        anyColor: '#000000'
+    }
+})
 Vue.use(api)
 
 Vue.config.productionTip = false
