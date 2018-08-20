@@ -10,23 +10,23 @@ const routes = [{
       import ('@/pages/home')
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: () => import ('@/pages/dashboard/layout'),
+    path: '/analytics',
+    name: 'analytics',
+    component: () => import ('@/pages/analytics/layout'),
     children: [{
         path: 'calls',
-        name: 'dashboard.calls',
-        component: () => import ('@/pages/dashboard/calls')
+        name: 'analytics.calls',
+        component: () => import ('@/pages/analytics/calls')
       },
       {
         path: 'conversions',
-        name: 'dashboard.conversions',
-        component: () => import ('@/pages/dashboard/conversions')
+        name: 'analytics.conversions',
+        component: () => import ('@/pages/analytics/conversions')
       },
       {
         path: 'logs',
-        name: 'dashboard.logs',
-        component: () => import ('@/pages/dashboard/logs')
+        name: 'analytics.logs',
+        component: () => import ('@/pages/analytics/logs')
       }
     ]
   }

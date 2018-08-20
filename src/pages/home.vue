@@ -70,7 +70,7 @@ export default {
       links: [
         {
           id: "1",
-          title: "Dashboard",
+          title: "Analytics",
           description:
             "Get detailed anlytics to measure and analyze how users engage with your app",
           color: "orange"

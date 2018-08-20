@@ -100,7 +100,7 @@ export default {
       analyticsItems: [{
           icon: 'dashboard',
           title: '应用关系图',
-          link: '/dashboard/calls'
+          link: '/analytics/calls'
         }
       ],
       developItems: [/*{
