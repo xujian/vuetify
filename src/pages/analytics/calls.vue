@@ -3,23 +3,10 @@
     <h1>应用调用关系图</h1>
       <v-layout row wrap>
         <v-flex xs12 sm3>
-          <v-select
-              :items="timeOptions"
-              :value="4"
-              @change="timeSelectChange"
-              label="时间段"
-            ></v-select>
+          <hsb-period-select v-model="timeSelected" />
         </v-flex>
         <v-flex xs12 sm3>
-          <v-select
-            multiple
-            :items="appOptions"
-            item-text="name"
-            item-value="name"
-            :value="appsSelected"
-            @change="appSelectChange"
-            label="按应用筛选"
-          ></v-select>
+          <hsb-app-select :options="appSelectOptions" v-model="appsSelected" />
         </v-flex>
         <v-flex xs12 sm3>
           <v-checkbox
@@ -34,6 +21,8 @@
 
 <script>
 import SankeyChart from '@/components/charts/sankey/index'
+import HsbPeriodSelect from '@/components/form/period-select'
+import HsbAppSelect from '@/components/form/app-select'
 
 /**
  * 调用接口获取数据并格式化
@@ -46,48 +35,24 @@ export default {
         links: [],
         nodes: []
       },
-      appOptions: [],
+      appSelectOptions: [],
       appsSelected: [],
       timeSelected: 4,
       includesNonStandard: false,
-      timeOptions: [
-        {
-            value: 1,
-            text: '最近5分钟'
-        }, {
-            value: 2,
-            text: '最近一个小时'
-        }, {
-            value: 3,
-            text: '最近一天'
-        }, {
-            value: 4,
-            text: '最近一周'
-        }, {
-            value: 5,
-            text: '最近一个月'
-        }, {
-            value: 6,
-            text: '最近一个季度'
-        }, {
-            value: 6,
-            text: '最近一年'
-        }
-      ]
     }
   },
   mounted() {
     this.query();
   },
+  watch: {
+    timeSelected () {
+      this.query()
+    },
+    appSelected () {
+      this.query()
+    }
+  },
   methods: {
-    timeSelectChange(value) {
-      this.timeSelected = value
-      this.query()
-    },
-    appSelectChange(value) {
-      this.appsSelected = value
-      this.query()
-    },
     query() {
       let params = {
         time: this.timeSelected,
@@ -118,8 +83,8 @@ export default {
           links: links
         }
         if (!this.includesNonStandard) this.excludeNonStandard()
-        if(this.appOptions.length === 0) {
-          this.appOptions = nodes.filter(n => n.level === 0)
+        if(this.appSelectOptions.length === 0) {
+          this.appSelectOptions = nodes.filter(n => n.level === 0)
         }
       })
     },
@@ -133,7 +98,9 @@ export default {
     }
   },
   components: {
-    SankeyChart
+    SankeyChart,
+    HsbPeriodSelect,
+    HsbAppSelect
   }
 }
 </script>
