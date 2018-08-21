@@ -37,7 +37,7 @@ export default {
     timeSelected () {
       this.query()
     },
-    appSelected () {
+    appsSelected () {
       this.query()
     }
   },

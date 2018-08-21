@@ -48,7 +48,7 @@ export default {
     timeSelected () {
       this.query()
     },
-    appSelected () {
+    appsSelected () {
       this.query()
     }
   },
@@ -65,7 +65,7 @@ export default {
         }
         if (!this.includesNonStandard) this.excludeNonStandard()
         if(this.appSelectOptions.length === 0) {
-          this.appSelectOptions = nodes.filter(n => n.level === 0)
+          this.appSelectOptions = this.sankeyData.nodes.filter(n => n.level === 0)
         }
       })
     },

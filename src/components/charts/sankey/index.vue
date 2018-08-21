@@ -133,7 +133,9 @@ export default {
       })
       initialData.nodes.forEach(node => {
         node.translate = `translate(${node.x}, ${node.y})`
-        node.title = `${node.name}\nIN: ${formatValue(node.in)} OUT: ${formatValue(node.out)}`
+        let ins = node.inLinks ? node.inLinks.map(l => l.source.name + ' → ' + l.calls).join('\n') : ''
+        let outs = node.outLinks ? node.outLinks.map(l => l.calls + ' → ' + l.target.name).join('\n') : ''
+        node.title = `${node.name}\n\nIN: ${formatValue(node.in)}\n${ins}\n\nOUT: ${formatValue(node.out)}\n${outs}`
       })
       return initialData
     },
