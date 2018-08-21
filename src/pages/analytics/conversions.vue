@@ -10,6 +10,17 @@
               label="时间段"
             ></v-select>
         </v-flex>
+        <v-flex xs12 sm3>
+          <v-select
+            multiple
+            :items="appOptions"
+            item-text="name"
+            item-value="name"
+            :value="appsSelected"
+            @change="appSelectChange"
+            label="按应用筛选"
+          ></v-select>
+        </v-flex>
     </v-layout>
     <sankey-chart :value="sankeyData" :levels="7"></sankey-chart>
   </div>
@@ -25,6 +36,8 @@ export default {
         links: [],
         nodes: []
       },
+      appOptions: [],
+      appsSelected: [],
       timeSelected: 4,
       timeOptions: [
         {
@@ -67,6 +80,7 @@ export default {
     query() {
       let params = {
         time: this.timeSelected,
+        apps: this.appsSelected,
         channel: 2
       }
       this.$api.call('/calls', {data: params}).then(response => {
@@ -91,6 +105,9 @@ export default {
         this.sankeyData = {
           nodes: nodes,
           links: links
+        }
+        if(this.appOptions.length === 0) {
+          this.appOptions = nodes.filter(n => n.level === 0)
         }
       })
     }
