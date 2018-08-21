@@ -26,7 +26,9 @@
         </g>
       </g>
       <g class="nodes" ref="nodes">
-        <g class="node" v-for="node in formatedData.nodes" 
+        <g v-for="node in formatedData.nodes"
+          class="node"
+          :class="{'hovered': node.hovered}"
           :key="node.id" 
           :transform="node.translate"
           @mouseover="onNodeMouseOver(node)"
@@ -141,13 +143,26 @@ export default {
     },
     onNodeMouseOver(node) {
       this.dim = true
-      node.inLinks.forEach(n => {n.hovered = true})
-      node.outLinks.forEach(n => {n.hovered = true})
+      node.hovered = true
+      node.inLinks.forEach(l => {
+        l.hovered = true
+        l.source.hovered = true
+      })
+      node.outLinks.forEach(l => {
+        l.hovered = true
+        l.target.hovered = true
+      })
     },
     onNodeMouseOut(node) {
       this.dim = false
-      node.inLinks.forEach(n => {n.hovered = false})
-      node.outLinks.forEach(n => {n.hovered = false})
+      node.inLinks.forEach(l => {
+        l.hovered = false
+        l.source.hovered = false
+      })
+      node.outLinks.forEach(l => {
+        l.hovered = false
+        l.target.hovered = false
+      })
     }
   },
   components: {
@@ -189,6 +204,9 @@ export default {
 .dim {
   .link-path:not(.hovered) {
     stroke-opacity: .1;
+  }
+  .node:not(.hovered) {
+    opacity: .1
   }
 }
 .ruler-rect {
