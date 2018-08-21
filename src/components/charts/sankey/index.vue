@@ -21,7 +21,8 @@
               class="link-path"
               :class="{'hovered': link.hovered}"
               :stroke="link.stroke"
-              :stroke-width="link.strokeWidth" />
+              :stroke-width="link.strokeWidth"
+              :title="link.title" />
         </g>
       </g>
       <g class="nodes" ref="nodes">
