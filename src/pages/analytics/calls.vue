@@ -54,33 +54,14 @@ export default {
   },
   methods: {
     query() {
-      let params = {
+      this.$api.call('/calls', {data: {
         time: this.timeSelected,
         apps: this.appsSelected,
         channel: 1
-      }
-      this.$api.call('/calls', {data: params}).then(response => {
-        let list = response.list, links = [], nodes = []
-        list.forEach((n) => {
-          nodes.push({
-            id: n.id,
-            name: n.node_name,
-            level: n.node_level - 1,
-            order: n.node_pos
-          })
-          n.next_nodes.forEach((t, i) => {
-            links.push({
-              source: n.node_name,
-              target: t.node_name,
-              calls: t.call_count,
-              time: t.average_time,
-              healthy: t.success_rate
-            })
-          })
-        })
+      }}).then(response => {
         this.sankeyData = {
-          nodes: nodes,
-          links: links
+          nodes: response.nodes,
+          links: response.links
         }
         if (!this.includesNonStandard) this.excludeNonStandard()
         if(this.appSelectOptions.length === 0) {

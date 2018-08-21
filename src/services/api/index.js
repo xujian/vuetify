@@ -100,6 +100,7 @@ let __call = (path, options) => {
           }
         })
         mappedParams = params
+        mapped.converts = api.converts
       } // if pattern
     }) // apis.forEach
   }) // mappings.forEach
@@ -194,10 +195,11 @@ let __call = (path, options) => {
       if (response._data._errCode === 0) {
         // 后台返回正常, 处理fields mapping
         let result = __trans(request.fields, response._data._retData)
-        resolve(result)
-        if (typeof response.coupon === 'number') {
-        store.commit('updateCoupon', {coupon: response.coupon})
+        //  field --- formatter
+        if (mapped.converts) {
+          result = mapped.converts.default.call(mapped, result)
         }
+        resolve(result)
       } else if (response.code === -2) { // 处理后台异常
         // vm.notice('系统繁忙')
       } else if (response.code === 10) {
