@@ -142,6 +142,7 @@ export default {
     },
     onNodeMouseOut(node) {
       this.dim = false
+      node.hovered = false
       node.inLinks.forEach(l => {
         l.hovered = false
         l.source.hovered = false
