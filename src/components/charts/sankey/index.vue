@@ -3,32 +3,24 @@
     <defs>
       <hsb-svg-marker-arrow id="marker-arrow"></hsb-svg-marker-arrow>
     </defs>
-    <g class="ruler" transform="translate(0, 1220)">
-      <g class="ruler-g" v-for="x in levelIndexes" :key="x" :transform="'translate(' + x * levelSize + ', 0)'">
-        <rect class="ruler-tick-rect" :class="'level-' + x" :width="x < levels - 1 ?  levelSize : 0" height="60"></rect>
-        <text :text-anchor="x < levels - 1 ? 'start' : 'end'" :x = "x < levels - 1 ? 5 : -5" y = "15">LEVEL {{x + 1}}</text>
-      </g>
-    </g>
-    <g class="background">
-      <path class="dashed" v-for="x in levelIndexes" :key="x" stroke-dasharray="4,1" :d="'M' + x * levelSize + ' 0 l0,1280'" />
-    </g>
+    <hsb-svg-coord type="x" :value="levels" :width="width" />
     <g ref="root" :class="{'dim':dim}" v-if="formatedData">
       <g class="links" ref="links">
         <g class="link" v-for="(link, i) in formatedData.links" :key="i">
-            <hsb-bezier 
-              :from="{x: link.source.x, y: link.source.y + link.sy + link.dy / 2}"
-              :to="{x: link.target.x, y: link.target.y + link.ty + link.dy / 2}"
-              class="link-path"
-              :class="{'hovered': link.hovered}"
-              :stroke="link.stroke"
-              :stroke-width="link.strokeWidth"
-              :title="link.title" />
+          <hsb-bezier 
+            :from="{x: link.source.x, y: link.source.y + link.sy + link.dy / 2}"
+            :to="{x: link.target.x, y: link.target.y + link.ty + link.dy / 2}"
+            class="link-path"
+            :class="{'hovered': link.hovered}"
+            :stroke="link.stroke"
+            :stroke-width="link.strokeWidth"
+            :title="link.title" />
         </g>
       </g>
       <g class="nodes" ref="nodes">
         <g v-for="node in formatedData.nodes"
           class="node"
-          :class="{'hovered': node.hovered}"
+          :class="{'hovered': node.hovered}" 
           :key="node.id" 
           :transform="node.translate"
           @mouseover="onNodeMouseOver(node)"
@@ -54,6 +46,7 @@ import engine from './engine';
 import HsbSvg from '@/components/svg'
 import HsbBezier from '@/components/svg/bezier'
 import HsbSvgMarkerArrow from '@/components/svg/marker-arrow'
+import HsbSvgCoord from '@/components/charts/coord'
 
 /** 
  * 输入固定格式参数 绘制SANKEY 桑基图
@@ -98,12 +91,6 @@ export default {
         .nodeWidth(20)
         .nodePadding(10)
         .size([this.width, this.height]);
-    },
-    levelSize() {
-      return this.width / (this.levels -1)
-    },
-    levelIndexes() {
-      return [...Array(this.levels).keys()]
     }
   },
   data() {
@@ -168,7 +155,8 @@ export default {
   components: {
     HsbSvg,
     HsbSvgMarkerArrow,
-    HsbBezier
+    HsbBezier,
+    HsbSvgCoord
   }
 };
 </script>
@@ -207,33 +195,6 @@ export default {
   }
   .node:not(.hovered) {
     opacity: .1
-  }
-}
-.ruler-rect {
-  fill: #ddd;
-  stroke: #cccccc;
-  stroke-width: 1px;
-}
-.ruler-tick-rect {
-  fill: #ddd;
-  stroke: #cccccc;
-  stroke-width: 1px;
-  &.level-1 {
-    fill: #ddd;
-  }
-  &.level-2 {
-    fill: #d8d8d8;
-  }
-  &.level-3 {
-    fill: #ccc;
-  }
-  &.level-4 {
-    fill: #c8c8c8;
-  }
-}
-.background {
-  .dashed {
-    stroke : #999
   }
 }
 </style>
